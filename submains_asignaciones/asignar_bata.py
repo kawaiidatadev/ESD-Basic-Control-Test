@@ -145,7 +145,7 @@ def asignar_bata(ventana_batas_esd, root):
         # Obtener ID de la bata seleccionada
         bata_id = tabla.item(seleccion[0])['values'][0]
         # Abrir la ventana para seleccionar el usuario
-        mostrar_usuarios_disponibles(bata_id)
+        mostrar_usuarios_disponibles(bata_id, asignar_batas_esd)
 
     # Ocultar la ventana principal al abrir la ventana de asignación
     ventana_batas_esd.withdraw()

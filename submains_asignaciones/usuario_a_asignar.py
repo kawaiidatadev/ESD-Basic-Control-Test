@@ -1,7 +1,7 @@
 from settings.__init__ import *  # Importar los paths
 from settings.conf_ventana import configurar_ventana
 
-def mostrar_usuarios_disponibles(bata_id):
+def mostrar_usuarios_disponibles(bata_id, asignar_batas_esd):
     # Crear la ventana para seleccionar usuario
     ventana_usuarios = tk.Toplevel()
     configurar_ventana(ventana_usuarios, "Seleccionar Usuario para Asignar")
@@ -49,5 +49,16 @@ def mostrar_usuarios_disponibles(bata_id):
 
     btn_asignar = tk.Button(ventana_usuarios, text="Asignar Bata", command=asignar_bata)
     btn_asignar.pack(pady=10)
+
+    # Función para salir del programa
+    def salir_programa():
+        ventana_usuarios.destroy()
+        asignar_batas_esd.deiconify()
+
+    # Crear el botón "Salir"
+    btn_salir = tk.Button(ventana_usuarios, text="Salir", command=salir_programa, font=("Arial", 14), bg="red",
+                          fg="white", height=2, width=10)
+    btn_salir.place(relx=1.0, rely=1.0, anchor='se', x=-10,
+                    y=-10)  # Posiciona el botón en la esquina inferior derecha
 
     ventana_usuarios.mainloop()
