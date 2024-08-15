@@ -2,24 +2,23 @@ from common import *
 from settings.__init__ import *
 
 consulta_de_usuarios = """
-        SELECT 
-            p.nombre_usuario, 
-            p.area, 
-            p.linea, 
-            p.rol, 
-            p.estatus_usuario,
-            u.bata_estatus, 
-            u.bata_polar_estatus, 
-            u.pulsera_estatus, 
-            u.talonera_estatus
-        FROM 
-            personal_esd p
-        LEFT JOIN 
-            usuarios_elementos u ON p.id = u.usuario_id
-        WHERE
-            p.estatus_usuario != 'Baja'
-        LIMIT ? OFFSET ?
-        """
+    SELECT 
+        nombre_usuario AS Nombre, 
+        area AS Área, 
+        linea AS Línea, 
+        rol AS Rol, 
+        estatus_usuario AS Estatus, 
+        bata_estatus AS "Bata Estatus",
+        bata_polar_estatus AS "Bata Polar Estatus",
+        pulsera_estatus AS "Pulsera Estatus",
+        talonera_estatus AS "Talonera Estatus"
+    FROM 
+        personal_esd
+    WHERE
+        estatus_usuario != 'Baja'
+    LIMIT ? OFFSET ?
+"""
+
 
 actualizar_un_usuario = '''
             UPDATE personal_esd
