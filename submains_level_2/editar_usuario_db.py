@@ -1,6 +1,7 @@
 from common import *
 from settings import db_path
 from settings.conf_ventana import configurar_ventana
+from strings_consultas_db import actualizar_un_usuario
 
 # Función para buscar usuarios en la base de datos
 def buscar_usuarios(ventana_editar, var_area, var_linea):
@@ -23,7 +24,7 @@ def buscar_usuarios(ventana_editar, var_area, var_linea):
 
         # Consultar usuarios según área y línea
         cursor.execute(
-            "SELECT nombre_usuario, rol, area, linea, puesto FROM personal_esd WHERE area = ? AND linea = ?",
+            "SELECT nombre_usuario, rol, area, linea, puesto FROM personal_esd WHERE area = ? AND linea = ? and estatus_usuario != 'Baja'",
             (area, linea))
         usuarios = cursor.fetchall()
         print(usuarios)  # Agrega esta línea para depurar
@@ -116,6 +117,10 @@ def editar_usuario_seleccionado(ventana_editar, var_area, var_linea):
                                                ventana_editar_usuario, ventana_editar, var_area, var_linea)).pack(
         pady=20)
 
+    # Botón para salir de la ventana de edición de usuario
+    tk.Button(ventana_editar_usuario, text="Salir", command=ventana_editar_usuario.destroy, font=("Arial", 14), bg="red", fg="white",
+              height=2, width=10).pack(pady=10)
+
     # Ejecutar la ventana de edición de usuario
     ventana_editar_usuario.mainloop()
 
@@ -131,11 +136,7 @@ def actualizar_datos(id_usuario, nombre_usuario_nuevo, rol_nuevo, area_nueva, li
         cursor = connection.cursor()
 
         # Actualizar datos del usuario
-        cursor.execute('''
-            UPDATE personal_esd
-            SET nombre_usuario = ?, rol = ?, area = ?, linea = ?, puesto = ?, fecha_registro = ?
-            WHERE id = ?
-        ''', (nombre_usuario_nuevo, rol_nuevo, area_nueva, linea_nueva, puesto_nuevo,
+        cursor.execute(actualizar_un_usuario, (nombre_usuario_nuevo, rol_nuevo, area_nueva, linea_nueva, puesto_nuevo,
               datetime.now().strftime("%Y-%m-%d %H:%M:%S"), id_usuario))
 
         connection.commit()
