@@ -1,7 +1,7 @@
 from common import *
 from settings.conf_ventana import configurar_ventana
 from settings import db_path
-from submains_level_2.registrar_usuario_db import guardar_usuario
+from submains_personal.registrar_usuario_db import guardar_usuario
 
 # Función para abrir la ventana de registro de usuarios
 def registrar_usuario(root, ventana_personal_esd):  # Agrega ventana_personal_esd como argumento

@@ -37,15 +37,3 @@ def parametros_medicion(root):
     # Ejecutar la ventana parámetros
     ventana_parametros.protocol("WM_DELETE_WINDOW", salir_programa)  # Asegúrate de cerrar correctamente
     ventana_parametros.mainloop()
-
-def reporte_central():
-    print("Reporte Central")
-
-def actividades():
-    print("Actividades")
-
-def control_asignaciones():
-    print("Control de Asignaciones de Equipos")
-
-def personal_esd():
-    print("Personal ESD")

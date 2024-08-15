@@ -1,9 +1,9 @@
 from common import *
 from settings.conf_ventana import configurar_ventana
-from submains_level_2.registrar_usuario import *
-from submains_level_2.editar_usuario import *
-from submains_level_2.consulta_usuarios_db import *
-from submains_level_2.eliminar_usuario import *
+from submains_personal.registrar_usuario import *
+from submains_personal.editar_usuario import *
+from submains_personal.consulta_usuarios_db import *
+from submains_personal.eliminar_usuario import *
 
 # Función para abrir la ventana de Personal ESD
 def personal_esd(root):
@@ -17,7 +17,7 @@ def personal_esd(root):
         ("Registrar", lambda: registrar_usuario(root, ventana_personal_esd)),
         ("Editar", lambda: editar_usuario(root, ventana_personal_esd)),
         ("Consultar", lambda: consultar_usuario(root, ventana_personal_esd)),
-        ("Eliminar", lambda: eliminar_usuario(root))
+        ("Eliminar", lambda: eliminar_usuario(root, ventana_personal_esd))
     ]
 
     for text, command in buttons:

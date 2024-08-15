@@ -1,7 +1,7 @@
 from common import *
 from settings.conf_ventana import configurar_ventana
 from settings import db_path
-from submains_level_2.editar_usuario_db import *
+from submains_personal.editar_usuario_db import *
 
 # Función para abrir la ventana de edición de usuarios
 def editar_usuario(root, ventana_personal_esd):

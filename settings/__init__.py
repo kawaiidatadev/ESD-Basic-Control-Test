@@ -15,6 +15,18 @@ inon_path = r'\\mercury\Mtto_Prod\00_Departamento_Mantenimiento\ESD\Software\Rec
 # Default document PDF "ANSI S20.20" default
 document_path = r'\\10.0.0.9\Mtto_Prod\00_Departamento_Mantenimiento\ESD\Documentos\Manuales\97_ELE_0_ANSI-ESD-S20.20-2014.pdf'
 
+imagen_fondo_registro_batas = r'\\mercury\Mtto_Prod\00_Departamento_Mantenimiento\ESD\Software\Recurses\registro_batas.png'
+
+def poner_imagen_de_fondo(ventana, path_imagen):
+    # Cargar la imagen de fondo
+    imagen_fondo = Image.open(path_imagen)
+    imagen_fondo = imagen_fondo.resize((ventana.winfo_width(), ventana.winfo_height()))
+    fondo = ImageTk.PhotoImage(imagen_fondo)
+
+    # Crear un label para la imagen de fondo
+    label_fondo = tk.Label(ventana, image=fondo)
+    label_fondo.image = fondo  # Necesario para evitar que el garbage collector elimine la imagen
+    label_fondo.place(relwidth=1, relheight=1)  # Hacer que el label ocupe toda la ventana
 
 def cambiar_imagen(label):
     new_image_path = filedialog.askopenfilename(filetypes=[("Image files", "*.png;*.jpg;*.jpeg")])

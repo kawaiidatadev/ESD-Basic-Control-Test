@@ -1,3 +1,6 @@
+from common import *
+from settings.__init__ import *
+
 consulta_de_usuarios = """
         SELECT 
             p.nombre_usuario, 
@@ -30,3 +33,29 @@ cargar_datos_usuario_eliminar = """
             WHERE estatus_usuario = 'Activo' AND area = ? AND linea = ?
             LIMIT ? OFFSET ?
         """
+
+
+registrar_nueva_bata_esd = """
+                INSERT INTO esd_items (tipo_elemento, numero_serie, tamaño, estatus, comentarios)
+                VALUES (?, ?, ?, 'Sin asignar', ?)
+            """
+
+
+def obtener_tamanos_unicos():
+    conn = sqlite3.connect(db_path)
+    cursor = conn.cursor()
+    query = "SELECT DISTINCT tamaño FROM esd_items WHERE estatus = 'Sin asignar';"
+    cursor.execute(query)
+    tamanos = [row[0] for row in cursor.fetchall()]
+    conn.close()
+    return tamanos
+
+def obtener_tipos_unicos():
+    conn = sqlite3.connect(db_path)
+    cursor = conn.cursor()
+    query = "SELECT DISTINCT tipo_elemento FROM esd_items WHERE estatus = 'Sin asignar';"
+    cursor.execute(query)
+    tipos = [row[0] for row in cursor.fetchall()]
+    conn.close()
+    return tipos
+

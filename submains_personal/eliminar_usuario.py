@@ -1,12 +1,14 @@
 # En eliminar_usuario.py
 from common import *
 from settings.__init__ import db_path
-from submains_level_2.confirmar_eliminacion_de_usuario import confirmar_eliminacion, cargar_datos
+from submains_personal.confirmar_eliminacion_de_usuario import confirmar_eliminacion, cargar_datos
 from settings.conf_ventana import configurar_ventana
 from strings_consultas_db import cargar_datos_usuario_eliminar
 
+
 # Función para eliminar un usuario
-def eliminar_usuario(root):
+def eliminar_usuario(root, ventana_personal_esd):
+    ventana_personal_esd.withdraw()  # Oculta la ventana de Personal ESD
     ventana_eliminar = tk.Toplevel(root)  # Crear una nueva ventana hija de root
     configurar_ventana(ventana_eliminar, "Eliminar Usuario")
 
@@ -63,7 +65,6 @@ def eliminar_usuario(root):
     tree.heading("Línea", text="Línea")
     tree.heading("Puesto", text="Puesto")
 
-
     # Opcionalmente, puedes ocultar la columna ID
     tree.column("ID", width=0, stretch=tk.NO)  # Ocultar la columna ID
 
@@ -95,21 +96,21 @@ def eliminar_usuario(root):
     label_pagina = tk.Label(ventana_eliminar, text="")
     label_pagina.pack(side=tk.RIGHT, padx=5, pady=5)
 
+    # Función para salir del programa
+    def salir_eliminar():
+        ventana_eliminar.destroy()
+        ventana_personal_esd.deiconify()  # Mostrar la ventana Personal ESD
+
     # Botón para eliminar usuario
     boton_eliminar = tk.Button(ventana_eliminar, text="Eliminar Usuario",
                                command=lambda: confirmar_eliminacion(tree, ventana_eliminar, db_path))
     boton_eliminar.pack(pady=10)
 
     # Crear el botón "Salir"
-    btn_salir = tk.Button(ventana_eliminar, text="Salir", command=ventana_eliminar.destroy, font=("Arial", 14),
+    btn_salir = tk.Button(ventana_eliminar, text="Salir", command=salir_eliminar, font=("Arial", 14),
                           bg="red", fg="white", height=2, width=10)
-    btn_salir.place(relx=1.0, rely=1.0, anchor='se', x=-10, y=-10)
 
-    # Función para salir del programa
-    def salir_eliminar():
-        ventana_eliminar.quit()
-        ventana_eliminar.destroy()
-        root.deiconify()
+    btn_salir.place(relx=1.0, rely=1.0, anchor='se', x=-10, y=-10)
 
     # Asegúrate de cerrar correctamente al cerrar la ventana
     ventana_eliminar.protocol("WM_DELETE_WINDOW", salir_eliminar)

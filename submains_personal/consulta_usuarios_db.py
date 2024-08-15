@@ -6,6 +6,7 @@ from strings_consultas_db import consulta_de_usuarios
 
 # Función para abrir la ventana de consulta de usuarios
 def consultar_usuario(root, ventana_personal_esd):
+    ventana_personal_esd.withdraw()
     ventana_consulta = tk.Toplevel(root)
     configurar_ventana(ventana_consulta, "Consulta de Usuarios ESD")
 
