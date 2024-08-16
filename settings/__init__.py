@@ -17,16 +17,28 @@ document_path = r'\\10.0.0.9\Mtto_Prod\00_Departamento_Mantenimiento\ESD\Documen
 
 imagen_fondo_registro_batas = r'\\mercury\Mtto_Prod\00_Departamento_Mantenimiento\ESD\Software\Recurses\registro_batas.png'
 
-def poner_imagen_de_fondo(ventana, path_imagen):
+menu_azusa = r'\\mercury\Mtto_Prod\00_Departamento_Mantenimiento\ESD\Software\Recurses\azusa.png'
+
+
+def poner_imagen_de_fondo(ventana, path_imagen, ancho=None, alto=None, x=0, y=0, resize=True):
     # Cargar la imagen de fondo
     imagen_fondo = Image.open(path_imagen)
-    imagen_fondo = imagen_fondo.resize((ventana.winfo_width(), ventana.winfo_height()))
+
+    # Redimensionar la imagen si se especifican las dimensiones o si resize es True
+    if resize or (ancho and alto):
+        ancho = ancho if ancho else ventana.winfo_width()
+        alto = alto if alto else ventana.winfo_height()
+        imagen_fondo = imagen_fondo.resize((ancho, alto),
+                                           Image.LANCZOS)  # Usar Image.LANCZOS en lugar de Image.ANTIALIAS
+
     fondo = ImageTk.PhotoImage(imagen_fondo)
 
     # Crear un label para la imagen de fondo
     label_fondo = tk.Label(ventana, image=fondo)
     label_fondo.image = fondo  # Necesario para evitar que el garbage collector elimine la imagen
-    label_fondo.place(relwidth=1, relheight=1)  # Hacer que el label ocupe toda la ventana
+    label_fondo.place(x=x, y=y, width=ancho if ancho else ventana.winfo_width(),
+                      height=alto if alto else ventana.winfo_height())
+
 
 def cambiar_imagen(label):
     new_image_path = filedialog.askopenfilename(filetypes=[("Image files", "*.png;*.jpg;*.jpeg")])

@@ -20,6 +20,8 @@ user_name = os.getlogin()  # O usa os.environ['USERNAME'] si getlogin no funcion
 welcome_label = tk.Label(root, text=f"¡Bienvenido, {user_name}!", font=("Arial", 16), fg="blue")
 welcome_label.place(relx=1.0, y=20, anchor='ne')  # Posición relativa en la esquina superior derecha
 
+poner_imagen_de_fondo(root, menu_azusa, ancho=500, alto=300, x=-50, y=5, resize=False)
+
 # Cargar imagen
 image = Image.open(default_image_path)
 image = image.resize((200, 200), Image.LANCZOS)
@@ -29,6 +31,7 @@ photo = ImageTk.PhotoImage(image)
 label_img = tk.Label(root, image=photo, borderwidth=0)
 label_img.pack(pady=10)
 label_img.bind("<Button-1>", lambda e: manejar_clic_imagen(e, label_img))
+
 
 # Crear botones
 buttons = [
