@@ -6,6 +6,9 @@ db_path = r'\\10.0.0.9\Mtto_Prod\00_Departamento_Mantenimiento\ESD\database.sqli
 #SQL de creacion de tablas
 sql_file = r'\\mercury\Mtto_Prod\00_Departamento_Mantenimiento\ESD\Software\Archivos db\create_db_sqlite.sql'
 
+#Rows example
+registros_ejemplo = r'\\mercury\Mtto_Prod\00_Departamento_Mantenimiento\ESD\Software\Archivos db\1_row_example.sql'
+
 # Default ESD image path
 default_image_path = r'\\10.0.0.9\Mtto_Prod\00_Departamento_Mantenimiento\ESD\ESD incono PNG.png'
 

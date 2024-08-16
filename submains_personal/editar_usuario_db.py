@@ -24,7 +24,8 @@ def buscar_usuarios(ventana_editar, var_area, var_linea):
 
         # Consultar usuarios según área y línea
         cursor.execute(
-            "SELECT nombre_usuario, rol, area, linea, puesto FROM personal_esd WHERE area = ? AND linea = ? and estatus_usuario != 'Baja'",
+            "SELECT nombre_usuario, rol, area, linea, puesto FROM personal_esd WHERE area = ? AND linea = ? and "
+            "estatus_usuario != 'Baja' ORDER BY nombre_usuario",
             (area, linea))
         usuarios = cursor.fetchall()
         print(usuarios)  # Agrega esta línea para depurar

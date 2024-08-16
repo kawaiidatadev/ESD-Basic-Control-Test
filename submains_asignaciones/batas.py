@@ -2,7 +2,8 @@ from common import *
 from settings.conf_ventana import configurar_ventana
 from settings.__init__ import *  # Importar los paths
 from submains_asignaciones.registrar_bata import registrar_nueva_bata
-from  submains_asignaciones.asignar_bata import asignar_bata
+from submains_asignaciones.asignar_bata import asignar_bata
+from submains_asignaciones.desasignar_bata import desasignar_bata
 
 def batas_asignaciones(asignaciones_window, root):
     ventana_batas_esd = tk.Toplevel(root)  # Crear una nueva ventana hija de root
@@ -13,7 +14,7 @@ def batas_asignaciones(asignaciones_window, root):
     buttons = [
         ("Registrar Nueva Bata", lambda: registrar_nueva_bata(ventana_batas_esd, root)),
         ("Asignar una Bata", lambda: asignar_bata(ventana_batas_esd, root)),
-        ("Desasignar una Bata", print('Bata3'))
+        ("Desasignar una Bata",lambda: desasignar_bata(ventana_batas_esd, root))
     ]
 
     for text, command in buttons:

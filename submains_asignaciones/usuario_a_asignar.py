@@ -1,64 +1,112 @@
 from settings.__init__ import *  # Importar los paths
 from settings.conf_ventana import configurar_ventana
 
-def mostrar_usuarios_disponibles(bata_id, asignar_batas_esd):
-    # Crear la ventana para seleccionar usuario
-    ventana_usuarios = tk.Toplevel()
-    configurar_ventana(ventana_usuarios, "Seleccionar Usuario para Asignar")
+
+def mostrar_usuarios_disponibles(bata_id, asignar_batas_esd, tipo_elemento):
+    # Crear la ventana
+    ventana = tk.Toplevel()
+    configurar_ventana(ventana, "Seleccionar Usuario para Asignar")
+
+    # Conectar a la base de datos
+    conexion = sqlite3.connect(db_path)
+    cursor = conexion.cursor()
 
     # Crear tabla para mostrar usuarios
-    columns = ("ID", "Nombre", "Rol", "Estatus de Bata")
-    tabla_usuarios = ttk.Treeview(ventana_usuarios, columns=columns, show='headings', height=10)
-    for col in columns:
-        tabla_usuarios.heading(col, text=col)
-    tabla_usuarios.pack(side=tk.LEFT)
+    tabla = ttk.Treeview(ventana, columns=("id", "nombre_usuario", "bata_estatus", "bata_polar_estatus"),
+                         show="headings")
+    tabla.heading("id", text="ID")
+    tabla.heading("nombre_usuario", text="Nombre Usuario")
+    tabla.heading("bata_estatus", text="Bata ESD Estatus")
+    tabla.heading("bata_polar_estatus", text="Bata Polar Estatus")
 
-    # Scrollbar
-    scrollbar = ttk.Scrollbar(ventana_usuarios, orient="vertical", command=tabla_usuarios.yview)
-    tabla_usuarios.configure(yscroll=scrollbar.set)
-    scrollbar.pack(side=tk.RIGHT, fill=tk.Y)
+    tabla.pack(fill=tk.BOTH, expand=True)
 
-    # Obtener usuarios disponibles
-    conn = sqlite3.connect(db_path)
-    cursor = conn.cursor()
-    query = """SELECT id, nombre_usuario, rol, bata_estatus FROM personal_esd 
-               WHERE (bata_estatus = 'Sin asignar' OR bata_estatus = 'Disponible') 
-               AND estatus_usuario = 'Activo';"""
-    cursor.execute(query)
-    usuarios = cursor.fetchall()
-    conn.close()
+    # Función para actualizar la tabla
+    def actualizar_tabla():
+        tabla.delete(*tabla.get_children())  # Limpiar tabla
 
-    # Insertar usuarios en la tabla
-    for usuario in usuarios:
-        tabla_usuarios.insert("", "end", values=usuario)
+        # Filtrar usuarios según el tipo de bata
+        if tipo_elemento == "Bata ESD":
+            query = "SELECT id, nombre_usuario, bata_estatus, bata_polar_estatus FROM personal_esd WHERE bata_estatus != 'Asignada'"
+        elif tipo_elemento == "Bata Polar ESD":
+            query = "SELECT id, nombre_usuario, bata_estatus, bata_polar_estatus FROM personal_esd WHERE bata_polar_estatus != 'Asignada'"
+        else:
+            messagebox.showerror("Error", "Tipo de elemento no válido.")
+            ventana.destroy()
+            return
 
-    # Función para asignar la bata al usuario seleccionado
+        cursor.execute(query)
+        usuarios = cursor.fetchall()
+
+        for usuario in usuarios:
+            tabla.insert("", tk.END, values=usuario)
+
+    # Llamar a la función para actualizar la tabla al abrir la ventana
+    actualizar_tabla()
+
+    def verificar_estatus(usuario_id):
+        # Verificar el estatus del usuario
+        cursor.execute("SELECT bata_estatus, bata_polar_estatus FROM personal_esd WHERE id = ?", (usuario_id,))
+        estatus = cursor.fetchone()
+
+        if not estatus:
+            return "No existe el usuario."
+
+        bata_esd_estatus, bata_polar_estatus = estatus
+
+        if tipo_elemento == "Bata ESD" and bata_esd_estatus == 'Asignada':
+            return "El usuario ya tiene una Bata ESD asignada."
+        elif tipo_elemento == "Bata Polar ESD" and bata_polar_estatus == 'Asignada':
+            return "El usuario ya tiene una Bata Polar ESD asignada."
+        return None
+
     def asignar_bata():
-        seleccion = tabla_usuarios.selection()
+        seleccion = tabla.selection()
         if not seleccion:
             messagebox.showwarning("Advertencia", "Por favor, seleccione un usuario para asignar la bata.")
             return
 
-        usuario_id = tabla_usuarios.item(seleccion[0])['values'][0]
+        usuario_id = tabla.item(seleccion[0])['values'][0]
 
-        # Aquí puedes agregar la lógica para actualizar los estatus en la base de datos
-        # por ejemplo, actualizando el estatus de la bata y del usuario en la base de datos.
+        # Verificar el estatus del usuario
+        mensaje_error = verificar_estatus(usuario_id)
+        if mensaje_error:
+            messagebox.showwarning("Advertencia", mensaje_error)
+            return
 
-        messagebox.showinfo("Éxito", f"Bata con ID {bata_id} asignada a usuario con ID {usuario_id}.")
-        ventana_usuarios.destroy()
+        # Actualizar estatus en personal_esd
+        if tipo_elemento == "Bata ESD":
+            cursor.execute("UPDATE personal_esd SET bata_estatus = 'Asignada' WHERE id = ?", (usuario_id,))
+            cursor.execute("UPDATE esd_items SET estatus = 'Asignada' WHERE id = ?", (bata_id,))
+        elif tipo_elemento == "Bata Polar ESD":
+            cursor.execute("UPDATE personal_esd SET bata_polar_estatus = 'Asignada' WHERE id = ?", (usuario_id,))
+            cursor.execute("UPDATE esd_items SET estatus = 'Asignada' WHERE id = ?", (bata_id,))
 
-    btn_asignar = tk.Button(ventana_usuarios, text="Asignar Bata", command=asignar_bata)
-    btn_asignar.pack(pady=10)
+        # Registrar la asignación en usuarios_elementos
+        cursor.execute("INSERT INTO usuarios_elementos (usuario_id, esd_item_id) VALUES (?, ?)", (usuario_id, bata_id))
+
+        conexion.commit()
+        conexion.close()
+
+        messagebox.showinfo("Éxito", "Bata asignada correctamente.")
+        ventana.destroy()
+        asignar_batas_esd.deiconify()  # Muestra nuevamente la ventana principal
+
+    # Botón para asignar la bata
+    boton_asignar = tk.Button(ventana, text="Asignar", command=asignar_bata)
+    boton_asignar.pack(pady=10)
 
     # Función para salir del programa
     def salir_programa():
-        ventana_usuarios.destroy()
-        asignar_batas_esd.deiconify()
+        ventana.destroy()  # Destruye el objeto
+        asignar_batas_esd.deiconify()  # Muestra nuevamente la ventana principal
 
     # Crear el botón "Salir"
-    btn_salir = tk.Button(ventana_usuarios, text="Salir", command=salir_programa, font=("Arial", 14), bg="red",
+    btn_salir = tk.Button(ventana, text="Salir", command=salir_programa, font=("Arial", 14), bg="red",
                           fg="white", height=2, width=10)
-    btn_salir.place(relx=1.0, rely=1.0, anchor='se', x=-10,
-                    y=-10)  # Posiciona el botón en la esquina inferior derecha
+    btn_salir.place(relx=1.0, rely=1.0, anchor='se', x=-10, y=-10)  # Posiciona el botón en la esquina inferior derecha
 
-    ventana_usuarios.mainloop()
+    # Ocultar la ventana principal al abrir la ventana de asignación
+    asignar_batas_esd.withdraw()
+    ventana.protocol("WM_DELETE_WINDOW", salir_programa)
+    ventana.mainloop()

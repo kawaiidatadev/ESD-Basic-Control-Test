@@ -14,9 +14,10 @@ def obtener_batas_disponibles(tamano, tipo):
     conn = sqlite3.connect(db_path)
     cursor = conn.cursor()
     query = """SELECT id, numero_serie, tamaño, comentarios FROM esd_items 
-               WHERE estatus = 'Sin asignar' 
+               WHERE estatus != 'Asignada' 
                AND (tamaño = ? OR ? = '') 
                AND (tipo_elemento = ? OR ? = '') 
+               ORDER BY tamaño
                LIMIT ? OFFSET ?;"""
     cursor.execute(query, (tamano, tamano, tipo, tipo, items_per_page, (current_page - 1) * items_per_page))
     results = cursor.fetchall()
@@ -28,7 +29,7 @@ def contar_batas_disponibles(tamano, tipo):
     conn = sqlite3.connect(db_path)
     cursor = conn.cursor()
     query = """SELECT COUNT(*) FROM esd_items 
-               WHERE estatus = 'Sin asignar' 
+               WHERE estatus != 'Asignada' 
                AND (tamaño = ? OR ? = '') 
                AND (tipo_elemento = ? OR ? = '');"""
     cursor.execute(query, (tamano, tamano, tipo, tipo))
@@ -103,9 +104,17 @@ def asignar_bata(ventana_batas_esd, root):
         btn_siguiente["state"] = "normal" if current_page * items_per_page < total_batas else "disabled"
         btn_anterior["state"] = "normal" if current_page > 1 else "disabled"
 
+    # Función para cambiar la página
+    def cambiar_pagina(direccion):
+        global current_page
+        current_page += direccion
+        actualizar_tabla()
+
     # Botón de buscar
-    btn_buscar = tk.Button(asignar_batas_esd, text="Buscar", command=actualizar_tabla)
-    btn_buscar.pack(pady=10)
+    btn_buscar = tk.Button(asignar_batas_esd, text="Buscar", command=actualizar_tabla,
+                           font=("Arial", 12, "bold"), bg="#3498db", fg="white", width=20, height=2,
+                           compound=tk.LEFT, relief=tk.RAISED, borderwidth=2)
+    btn_buscar.pack(pady=10, padx=20)
 
     # Mejorar presentación de los botones de paginación
     btn_anterior = tk.Button(asignar_batas_esd, text="Página Anterior", command=lambda: cambiar_pagina(-1),
@@ -116,20 +125,10 @@ def asignar_bata(ventana_batas_esd, root):
                               font=("Arial", 10, "bold"), bg="#3498db", fg="white", width=15, height=2)
     btn_siguiente.pack(side=tk.RIGHT, padx=20, pady=10)
 
-    # Función para salir del programa
-    def salir_programa():
-        asignar_batas_esd.destroy()  # Destruye el objeto
-        ventana_batas_esd.deiconify()  # Muestra nuevamente la ventana principal
-
     # Crear el botón "Salir"
     btn_salir = tk.Button(asignar_batas_esd, text="Salir", command=salir_programa, font=("Arial", 14), bg="red",
                           fg="white", height=2, width=10)
     btn_salir.place(relx=1.0, rely=1.0, anchor='se', x=-10, y=-10)  # Posiciona el botón en la esquina inferior derecha
-
-    def cambiar_pagina(direccion):
-        global current_page
-        current_page += direccion
-        actualizar_tabla()
 
     # Crear el botón "Asignar" con mejor presentación
     btn_asignar = tk.Button(asignar_batas_esd, text="Asignar Bata", command=lambda: asignar_bata_a_usuario(tabla_batas),
@@ -144,8 +143,21 @@ def asignar_bata(ventana_batas_esd, root):
             return
         # Obtener ID de la bata seleccionada
         bata_id = tabla.item(seleccion[0])['values'][0]
+
+        # Obtener el tipo de bata seleccionado
+        tipo_elemento = entry_tipo.get()  # Asegúrate de que `entry_tipo` esté accesible aquí
+
         # Abrir la ventana para seleccionar el usuario
-        mostrar_usuarios_disponibles(bata_id, asignar_batas_esd)
+        mostrar_usuarios_disponibles(bata_id, asignar_batas_esd, tipo_elemento)
+
+        asignar_batas_esd.after(500, actualizar_tabla)  # Retraso para permitir que la ventana de usuario se cierre
+
+    # Función para actualizar la tabla cuando la ventana se muestra
+    def al_mostrar_ventana(event):
+        actualizar_tabla()
+
+    # Asociar el evento <<Show>> para actualizar la tabla al mostrar la ventana
+    asignar_batas_esd.bind("<Map>", al_mostrar_ventana)
 
     # Ocultar la ventana principal al abrir la ventana de asignación
     ventana_batas_esd.withdraw()

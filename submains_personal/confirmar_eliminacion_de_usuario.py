@@ -15,7 +15,7 @@ def cargar_datos(cursor, tree, label_pagina, btn_siguiente, btn_anterior, area, 
     label_pagina.config(text=f"Página {current_page}")
 
     # Verificar si hay más páginas
-    cursor.execute("SELECT COUNT(*) FROM personal_esd WHERE estatus_usuario = 'Activo' AND area = ? AND linea = ?", (area, linea))
+    cursor.execute("SELECT COUNT(*) FROM personal_esd WHERE estatus_usuario = 'Activo' AND area = ? AND linea = ? ", (area, linea))
     total_users = cursor.fetchone()[0]
     if current_page * page_size >= total_users:
         btn_siguiente.config(state="disabled")
