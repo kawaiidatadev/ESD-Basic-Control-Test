@@ -58,3 +58,10 @@ def obtener_tipos_unicos():
     conn.close()
     return tipos
 
+
+cargar_usuarios_desasignar = """
+            SELECT id, nombre_usuario, rol, puesto, bata_estatus, bata_polar_estatus
+            FROM personal_esd
+            WHERE bata_estatus = 'Asignada' OR bata_polar_estatus = 'Asignada'
+            ORDER BY nombre_usuario
+        """

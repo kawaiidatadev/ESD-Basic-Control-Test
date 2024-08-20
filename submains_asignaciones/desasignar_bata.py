@@ -1,124 +1,175 @@
-from common import *  # Asumimos que este archivo tiene funciones comunes que usas en otros módulos
+from common import *
 from settings.conf_ventana import configurar_ventana
-from settings.__init__ import *  # Importar los paths
+from settings.__init__ import *
+from strings_consultas_db import cargar_usuarios_desasignar
 
 
-
-def desasignar_bata(ventana_padre, root):
+def desasignar_bata(ventana_batas_esd, root):
     ventana_desasignar = tk.Toplevel(root)
+    ventana_batas_esd.withdraw()
     configurar_ventana(ventana_desasignar, "Desasignar Bata ESD")
 
-    # Ocultar la ventana padre al abrir la nueva ventana
-    ventana_padre.withdraw()
+    table_frame = tk.Frame(ventana_desasignar)
+    table_frame.pack(pady=20)
 
-    # Variables para los filtros
-    area_seleccionada = tk.StringVar()
-    linea_seleccionada = tk.StringVar()
+    columns = ("ID", "Nombre", "Rol", "Puesto", "Bata Estatus", "Bata Polar Estatus")
+    tree = ttk.Treeview(table_frame, columns=columns, show='headings')
+    for col in columns:
+        tree.heading(col, text=col)
+    tree.pack()
 
-    # Obtener áreas y líneas desde la base de datos
-    areas = obtener_areas()
-    lineas = obtener_lineas()
+    conn = sqlite3.connect(db_path)
+    cursor = conn.cursor()
 
-    # Widgets para seleccionar Área y Línea
-    tk.Label(ventana_desasignar, text="Área:", font=("Arial", 12)).pack(pady=5)
-    area_menu = ttk.Combobox(ventana_desasignar, textvariable=area_seleccionada, values=areas, state="readonly")
-    area_menu.pack(pady=5)
-    area_menu.current(0)  # Selecciona la primera área por defecto
-
-    tk.Label(ventana_desasignar, text="Línea:", font=("Arial", 12)).pack(pady=5)
-    linea_menu = ttk.Combobox(ventana_desasignar, textvariable=linea_seleccionada, values=lineas, state="readonly")
-    linea_menu.pack(pady=5)
-    linea_menu.current(0)  # Selecciona la primera línea por defecto
-
-    # Tabla para mostrar los usuarios
-    cols = ("ID", "Nombre Usuario", "Rol", "Puesto", "Bata Estatus", "Bata Polar Estatus")
-    tabla_usuarios = ttk.Treeview(ventana_desasignar, columns=cols, show='headings')
-    for col in cols:
-        tabla_usuarios.heading(col, text=col)
-        tabla_usuarios.column(col, width=150)
-
-    tabla_usuarios.pack(pady=20, fill='x')
-
-    # Función para cargar datos en la tabla
     def cargar_usuarios():
-        for i in tabla_usuarios.get_children():
-            tabla_usuarios.delete(i)
-        usuarios = obtener_usuarios(area_seleccionada.get(), linea_seleccionada.get())
+        try:
+            cursor.execute(cargar_usuarios_desasignar)
+            usuarios = cursor.fetchall()
+        except sqlite3.Error as e:
+            messagebox.showerror("Error de Base de Datos", f"Ha ocurrido un error al cargar los usuarios: {e}")
+            return
+
+        for item in tree.get_children():
+            tree.delete(item)
+
         for usuario in usuarios:
-            tabla_usuarios.insert("", "end", values=usuario)
+            tree.insert("", "end", values=usuario)
 
-    # Cargar usuarios al seleccionar Área o Línea
-    area_menu.bind("<<ComboboxSelected>>", lambda e: cargar_usuarios())
-    linea_menu.bind("<<ComboboxSelected>>", lambda e: cargar_usuarios())
+    cargar_usuarios()
 
-    cargar_usuarios()  # Cargar usuarios por defecto
+    bata_frame = tk.Frame(ventana_desasignar)
+    bata_frame.pack(pady=20)
 
-    # Sección de Desasignación
-    causa_var = tk.StringVar()
-    causas = ["Daño físico", "No pasa las mediciones", "Otra"]
+    tk.Label(bata_frame, text="Seleccione Bata:", font=("Arial", 12)).grid(row=0, column=0, padx=10)
+    bata_combobox = ttk.Combobox(bata_frame, font=("Arial", 12), state='disabled')
+    bata_combobox.grid(row=0, column=1, padx=10)
 
-    tk.Label(ventana_desasignar, text="Causa:", font=("Arial", 12)).pack(pady=5)
-    causa_menu = ttk.Combobox(ventana_desasignar, textvariable=causa_var, values=causas, state="readonly")
-    causa_menu.pack(pady=5)
-    causa_menu.current(0)
+    causas_frame = tk.Frame(ventana_desasignar)
+    causas_frame.pack(pady=20)
 
-    comentario_text = tk.Text(ventana_desasignar, height=5, state='disabled')
-    comentario_text.pack(pady=5, fill='x')
+    tk.Label(causas_frame, text="Causa:", font=("Arial", 12)).grid(row=0, column=0, padx=10)
+    causa_combobox = ttk.Combobox(causas_frame, font=("Arial", 12), state='disabled')
+    causa_combobox['values'] = ["Daño físico", "No pasa las mediciones", "Otra"]
+    causa_combobox.grid(row=0, column=1, padx=10)
+    causa_combobox.current(0)
 
-    def habilitar_comentario(*args):
-        if causa_var.get() == "Otra":
-            comentario_text.config(state='normal')
+    comentarios_label = tk.Label(causas_frame, text="Comentarios:", font=("Arial", 12))
+    comentarios_text = tk.Text(causas_frame, font=("Arial", 12), height=4, width=40)
+
+    def mostrar_comentarios(event):
+        if causa_combobox.get() == "Otra":
+            comentarios_label.grid(row=1, column=0, padx=10, pady=10)
+            comentarios_text.grid(row=1, column=1, padx=10, pady=10)
         else:
-            comentario_text.config(state='disabled')
-            comentario_text.delete('1.0', tk.END)
+            comentarios_label.grid_forget()
+            comentarios_text.grid_forget()
 
-    causa_menu.bind("<<ComboboxSelected>>", habilitar_comentario)
+    causa_combobox.bind("<<ComboboxSelected>>", mostrar_comentarios)
+
+    def habilitar_opciones(event):
+        if tree.selection():
+            bata_combobox.config(state='normal')
+            causa_combobox.config(state='normal')
+
+            seleccion = tree.selection()[0]
+            usuario_info = tree.item(seleccion)['values']
+
+            opciones_bata = []
+            if usuario_info[4] == "Asignada":
+                opciones_bata.append("Bata ESD")
+            if usuario_info[5] == "Asignada":
+                opciones_bata.append("Bata Polar ESD")
+
+            bata_combobox['values'] = opciones_bata
+
+            if len(opciones_bata) == 1:
+                bata_combobox.current(0)
+            else:
+                bata_combobox.set('')
+        else:
+            bata_combobox.config(state='disabled')
+            causa_combobox.config(state='disabled')
+            bata_combobox.set('')
+
+    tree.bind("<<TreeviewSelect>>", habilitar_opciones)
 
     def desasignar():
-        usuario_seleccionado = tabla_usuarios.selection()
-        if not usuario_seleccionado:
-            messagebox.showerror("Error", "Selecciona un usuario.")
-            return
+        seleccion = tree.selection()
+        if seleccion:
+            usuario_id = tree.item(seleccion)['values'][0]
+            bata_seleccionada = bata_combobox.get()
+            causa_seleccionada = causa_combobox.get()
+            comentarios = comentarios_text.get("1.0", "end").strip() if causa_seleccionada == "Otra" else None
 
-        causa = causa_var.get()
-        comentario = comentario_text.get('1.0', tk.END).strip() if causa == "Otra" else ""
+            if causa_seleccionada == "Otra" and not comentarios:
+                messagebox.showwarning("Advertencia", "Debe escribir un comentario para la causa seleccionada.")
+                return
 
-        if causa == "Otra" and not comentario:
-            messagebox.showerror("Error", "El campo de comentario no puede estar vacío.")
-            return
+            try:
+                esd_item_id = None  # Variable para almacenar el ID del ítem ESD que se va a eliminar o desasignar
 
-        confirmar = messagebox.askyesno("Confirmar", "¿Deseas desasignar la bata ESD o la bata Polar ESD?")
-        if confirmar:
-            tipo_bata = messagebox.askyesno("Tipo de Bata", "¿Desasignar Bata Polar ESD?")
-            tipo_bata = "Polar" if tipo_bata else "ESD"
+                if bata_seleccionada == "Bata ESD":
+                    # Obtener el esd_item_id desde usuarios_elementos
+                    cursor.execute("SELECT esd_item_id FROM usuarios_elementos WHERE usuario_id = ?",
+                                   (usuario_id,))
+                    resultado = cursor.fetchone()
+                    if resultado:
+                        esd_item_id = resultado[0]
+                        cursor.execute("UPDATE personal_esd SET bata_estatus = 'Sin asignar' WHERE id = ?",
+                                       (usuario_id,))
+                        eliminar = messagebox.askquestion("Eliminar Bata", "¿Desea eliminar la Bata ESD?",
+                                                          icon='warning')
+                        if eliminar == 'yes':
+                            cursor.execute("UPDATE esd_items SET estatus = 'Eliminada' WHERE id = ?", (esd_item_id,))
+                        else:
+                            cursor.execute("UPDATE esd_items SET estatus = 'Desasignada' WHERE id = ?", (esd_item_id,))
+                    else:
+                        messagebox.showerror("Error", "No se encontró una Bata ESD asignada a este usuario.")
+                        return
 
-            # Actualizar la base de datos
-            actualizar_estatus_bata(usuario_seleccionado, tipo_bata, "Sin asignar")
-            if messagebox.askyesno("Eliminar Bata", f"¿Deseas eliminar la bata {tipo_bata}?"):
-                eliminar_bata(usuario_seleccionado, tipo_bata)
-            else:
-                desasignar_usuario_elemento(usuario_seleccionado, tipo_bata, "Desasignada")
+                elif bata_seleccionada == "Bata Polar ESD":
+                    # Obtener el esd_item_id desde usuarios_elementos
+                    cursor.execute("SELECT esd_item_id FROM usuarios_elementos WHERE usuario_id = ?",
+                                   (usuario_id,))
+                    resultado = cursor.fetchone()
+                    if resultado:
+                        esd_item_id = resultado[0]
+                        cursor.execute("UPDATE personal_esd SET bata_polar_estatus = 'Sin asignar' WHERE id = ?",
+                                       (usuario_id,))
+                        eliminar = messagebox.askquestion("Eliminar Bata", "¿Desea eliminar la Bata Polar ESD?",
+                                                          icon='warning')
+                        if eliminar == 'yes':
+                            cursor.execute("UPDATE esd_items SET estatus = 'Eliminada' WHERE id = ?", (esd_item_id,))
+                        else:
+                            cursor.execute("UPDATE esd_items SET estatus = 'Desasignada' WHERE id = ?", (esd_item_id,))
+                    else:
+                        messagebox.showerror("Error", "No se encontró una Bata Polar ESD asignada a este usuario.")
+                        return
 
-            messagebox.showinfo("Éxito", "Bata desasignada correctamente.")
-            cargar_usuarios()
+                if esd_item_id:
+                    # Eliminar la relación en la tabla usuarios_elementos
+                    cursor.execute("DELETE FROM usuarios_elementos WHERE usuario_id = ? AND esd_item_id = ?",
+                                   (usuario_id, esd_item_id))
 
-    # Botón de Desasignar
-    btn_desasignar = tk.Button(ventana_desasignar, text="Desasignar", command=desasignar, font=("Arial", 14),
-                               bg="green",
-                               fg="white", height=2, width=20)
-    btn_desasignar.pack(pady=10)
+                conn.commit()
+                messagebox.showinfo("Éxito", "La bata ha sido desasignada correctamente.")
+                cargar_usuarios()
+            except sqlite3.Error as e:
+                messagebox.showerror("Error de Base de Datos", f"Ha ocurrido un error al desasignar la bata: {e}")
 
-    # Función para salir del programa
+    tk.Button(ventana_desasignar, text="Desasignar", command=desasignar, font=("Arial", 14), bg="red", fg="white",
+              height=2, width=20).pack(pady=20)
+
     def salir_programa():
         ventana_desasignar.destroy()
-        ventana_padre.deiconify()
+        ventana_batas_esd.deiconify()
 
-    # Botón de Salir
-    btn_salir = tk.Button(ventana_desasignar, text="Salir", command=salir_programa, font=("Arial", 14), bg="red",
-                          fg="white", height=2, width=10)
-    btn_salir.place(relx=1.0, rely=1.0, anchor='se', x=-10, y=-10)
+    tk.Button(ventana_desasignar, text="Salir", command=salir_programa, font=("Arial", 14), bg="red", fg="white",
+              height=2, width=10).place(relx=1.0, rely=1.0, anchor='se', x=-10, y=-10)
 
-    # Configurar cierre de ventana
     ventana_desasignar.protocol("WM_DELETE_WINDOW", salir_programa)
+
     ventana_desasignar.mainloop()
 
+    cursor.close()
+    conn.close()
