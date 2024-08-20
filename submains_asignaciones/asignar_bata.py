@@ -14,7 +14,7 @@ def obtener_batas_disponibles(tamano, tipo):
     conn = sqlite3.connect(db_path)
     cursor = conn.cursor()
     query = """SELECT id, numero_serie, tamaño, comentarios FROM esd_items 
-               WHERE estatus != 'Asignada' 
+               WHERE estatus != 'Asignada' and estatus != 'Eliminada'
                AND (tamaño = ? OR ? = '') 
                AND (tipo_elemento = ? OR ? = '') 
                ORDER BY tamaño
@@ -29,7 +29,7 @@ def contar_batas_disponibles(tamano, tipo):
     conn = sqlite3.connect(db_path)
     cursor = conn.cursor()
     query = """SELECT COUNT(*) FROM esd_items 
-               WHERE estatus != 'Asignada' 
+               WHERE estatus != 'Asignada' and estatus != 'Eliminada'
                AND (tamaño = ? OR ? = '') 
                AND (tipo_elemento = ? OR ? = '');"""
     cursor.execute(query, (tamano, tamano, tipo, tipo))

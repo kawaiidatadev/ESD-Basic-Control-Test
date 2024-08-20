@@ -43,7 +43,7 @@ registrar_nueva_bata_esd = """
 def obtener_tamanos_unicos():
     conn = sqlite3.connect(db_path)
     cursor = conn.cursor()
-    query = "SELECT DISTINCT tamaño FROM esd_items WHERE estatus = 'Sin asignar';"
+    query = "SELECT DISTINCT tamaño FROM esd_items WHERE estatus = 'Sin asignar' and estatus != 'Eliminada';"
     cursor.execute(query)
     tamanos = [row[0] for row in cursor.fetchall()]
     conn.close()
@@ -52,7 +52,7 @@ def obtener_tamanos_unicos():
 def obtener_tipos_unicos():
     conn = sqlite3.connect(db_path)
     cursor = conn.cursor()
-    query = "SELECT DISTINCT tipo_elemento FROM esd_items WHERE estatus = 'Sin asignar';"
+    query = "SELECT DISTINCT tipo_elemento FROM esd_items WHERE estatus = 'Sin asignar' and estatus != 'Eliminada';"
     cursor.execute(query)
     tipos = [row[0] for row in cursor.fetchall()]
     conn.close()
