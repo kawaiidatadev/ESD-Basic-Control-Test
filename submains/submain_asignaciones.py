@@ -2,6 +2,7 @@ from common import *
 from settings.conf_ventana import configurar_ventana
 from settings.__init__ import *  # Importar los paths y funciones necesarios
 from submains_asignaciones.batas import *
+from pulseras_esd.pulseras_esd import pulseras_asignaciones
 
 def control_asignaciones(root):
     asignaciones_window = tk.Toplevel()  # Crear una nueva ventana
@@ -11,7 +12,7 @@ def control_asignaciones(root):
     # Crear botones para "Batas ESD", "Pulseras ESD", "Taloneras ESD", y "Evidencias de Asignación"
     buttons = [
         ("Batas ESD", lambda: batas_asignaciones(asignaciones_window, root)),
-        ("Pulseras ESD", manejar_pulseras_esd),
+        ("Pulseras ESD", lambda: pulseras_asignaciones(asignaciones_window, root)),
         ("Taloneras ESD", manejar_taloneras_esd),
         ("Evidencias de Asignación", manejar_evidencias_asignacion)
     ]
