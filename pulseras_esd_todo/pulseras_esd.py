@@ -6,6 +6,8 @@ from pulseras_esd_todo.registrar_pulsera import abrir_ventana_registro  # Import
 from submains_asignaciones.usuario_a_asignar import mostrar_usuarios_disponibles
 from strings_consultas_db import obtener_tamanos_unicos, obtener_tipos_unicos
 from pulseras_esd_todo.asignar_pulseras import ventana_asignar_pulseras
+from pulseras_esd_todo.desasignar_pulseras import ventana_desasignar_pulseras
+
 
 def pulseras_asignaciones(asignaciones_window, root):
     pulseras_asignaciones = tk.Toplevel(root)
@@ -36,6 +38,7 @@ def pulseras_asignaciones(asignaciones_window, root):
 
     # Crear el botón "Desasignar una Pulsera"
     btn_desasignar_pulsera = tk.Button(pulseras_asignaciones, text="Desasignar una Pulsera",
-                                       command=lambda: print("Desasignar Pulsera"),
+                                       command=lambda: ventana_desasignar_pulseras(pulseras_asignaciones),
                                        font=("Arial", 14), bg="orange", fg="white", height=2, width=20)
     btn_desasignar_pulsera.place(relx=0.5, rely=0.7, anchor='center')
+

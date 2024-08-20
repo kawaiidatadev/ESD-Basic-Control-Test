@@ -65,3 +65,19 @@ cargar_usuarios_desasignar = """
             WHERE bata_estatus = 'Asignada' OR bata_polar_estatus = 'Asignada'
             ORDER BY nombre_usuario
         """
+
+
+# Función para obtener los datos de los usuarios con pulseras asignadas
+def obtener_usuarios_con_pulseras():
+    conn = sqlite3.connect(db_path)  # Actualiza con la ruta correcta
+    cursor = conn.cursor()
+    query = """
+        SELECT id, nombre_usuario, rol, area, linea, puesto, pulsera_estatus 
+        FROM personal_esd 
+        WHERE estatus_usuario = 'Activo' AND pulsera_estatus = 'Asignada'
+        ORDER BY nombre_usuario
+    """
+    cursor.execute(query)
+    resultados = cursor.fetchall()
+    conn.close()
+    return resultados
