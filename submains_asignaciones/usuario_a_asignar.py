@@ -2,22 +2,42 @@ from settings.__init__ import *  # Importar los paths
 from settings.conf_ventana import configurar_ventana
 
 
+import tkinter as tk
+from tkinter import ttk, messagebox
+import sqlite3
+from settings.__init__ import *  # Importar los paths
+from settings.conf_ventana import configurar_ventana
+
+
 def mostrar_usuarios_disponibles(bata_id, asignar_batas_esd, tipo_elemento):
     # Crear la ventana
     ventana = tk.Toplevel()
-    configurar_ventana(ventana, "Seleccionar Usuario para Asignar")
+    configurar_ventana(ventana, "Seleccionar usuario para asignar")
 
     # Conectar a la base de datos
     conexion = sqlite3.connect(db_path)
     cursor = conexion.cursor()
 
+    # Crear marco para la tabla y la barra de desplazamiento
+    frame_tabla = tk.Frame(ventana)
+    frame_tabla.pack(fill=tk.BOTH, expand=True)
+
     # Crear tabla para mostrar usuarios
-    tabla = ttk.Treeview(ventana, columns=("id", "nombre_usuario", "bata_estatus", "bata_polar_estatus"),
+    tabla = ttk.Treeview(frame_tabla, columns=("id", "nombre_usuario", "bata_estatus", "bata_polar_estatus"),
                          show="headings")
     tabla.heading("id", text="ID")
     tabla.heading("nombre_usuario", text="Nombre Usuario")
     tabla.heading("bata_estatus", text="Bata ESD Estatus")
     tabla.heading("bata_polar_estatus", text="Bata Polar Estatus")
+
+    # Añadir scrollbar vertical y horizontal
+    scrollbar_vertical = ttk.Scrollbar(frame_tabla, orient="vertical", command=tabla.yview)
+    tabla.configure(yscrollcommand=scrollbar_vertical.set)
+    scrollbar_vertical.pack(side=tk.RIGHT, fill=tk.Y)
+
+    scrollbar_horizontal = ttk.Scrollbar(frame_tabla, orient="horizontal", command=tabla.xview)
+    tabla.configure(xscrollcommand=scrollbar_horizontal.set)
+    scrollbar_horizontal.pack(side=tk.BOTTOM, fill=tk.X)
 
     tabla.pack(fill=tk.BOTH, expand=True)
 
@@ -93,7 +113,8 @@ def mostrar_usuarios_disponibles(bata_id, asignar_batas_esd, tipo_elemento):
         asignar_batas_esd.deiconify()  # Muestra nuevamente la ventana principal
 
     # Botón para asignar la bata
-    boton_asignar = tk.Button(ventana, text="Asignar", command=asignar_bata)
+    boton_asignar = tk.Button(ventana, text="Asignar", command=asignar_bata, font=("Arial", 12, "bold"), bg="#2ecc71",
+                             fg="white", width=15, height=2)
     boton_asignar.pack(pady=10)
 
     # Función para salir del programa
@@ -110,3 +131,4 @@ def mostrar_usuarios_disponibles(bata_id, asignar_batas_esd, tipo_elemento):
     asignar_batas_esd.withdraw()
     ventana.protocol("WM_DELETE_WINDOW", salir_programa)
     ventana.mainloop()
+
