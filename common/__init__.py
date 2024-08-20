@@ -6,5 +6,8 @@ from PIL import Image, ImageTk
 import sqlite3
 import subprocess
 from datetime import datetime
-
+import openpyxl
+from openpyxl.styles import Font, Alignment, PatternFill
+import shutil
+import locale
 

@@ -1,13 +1,6 @@
 from settings.__init__ import *  # Importar los paths
 from settings.conf_ventana import configurar_ventana
-
-
-import tkinter as tk
-from tkinter import ttk, messagebox
-import sqlite3
-from settings.__init__ import *  # Importar los paths
-from settings.conf_ventana import configurar_ventana
-
+from submains_asignaciones.responsiba_batas import generar_responsiba
 
 def mostrar_usuarios_disponibles(bata_id, asignar_batas_esd, tipo_elemento):
     # Crear la ventana
@@ -87,6 +80,35 @@ def mostrar_usuarios_disponibles(bata_id, asignar_batas_esd, tipo_elemento):
             return
 
         usuario_id = tabla.item(seleccion[0])['values'][0]
+        nombre_usuario = tabla.item(seleccion[0])['values'][1]
+
+        print(usuario_id)
+
+        # Obtener más datos necesarios para la impresión
+        cursor.execute("""
+            SELECT p.area, p.linea, e.numero_serie, e.tamaño
+            FROM personal_esd p
+            JOIN esd_items e ON p.id = e.id
+            WHERE p.id = ?
+        """, (usuario_id,))
+        datos_usuario = cursor.fetchone()
+
+        if not datos_usuario:
+            messagebox.showerror("Error", "No se encontraron datos para el usuario seleccionado.")
+            return
+
+        area, linea, numero_serie, tamaño = datos_usuario
+
+        # Llamar a la función para imprimir los datos
+        generar_responsiba(
+            usuario_id=usuario_id,
+            nombre_usuario=nombre_usuario,
+            area=area,
+            linea=linea,
+            tipo_elemento=tipo_elemento,
+            numero_serie=numero_serie,
+            tamaño=tamaño
+        )
 
         # Verificar el estatus del usuario
         mensaje_error = verificar_estatus(usuario_id)
@@ -114,7 +136,7 @@ def mostrar_usuarios_disponibles(bata_id, asignar_batas_esd, tipo_elemento):
 
     # Botón para asignar la bata
     boton_asignar = tk.Button(ventana, text="Asignar", command=asignar_bata, font=("Arial", 12, "bold"), bg="#2ecc71",
-                             fg="white", width=15, height=2)
+                              fg="white", width=15, height=2)
     boton_asignar.pack(pady=10)
 
     # Función para salir del programa
