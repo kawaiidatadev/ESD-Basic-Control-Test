@@ -2,7 +2,7 @@ from common import *
 from settings.conf_ventana import configurar_ventana
 from settings.__init__ import *  # Importar los paths y funciones necesarios
 from submains_asignaciones.batas import *
-from pulseras_esd.pulseras_esd import pulseras_asignaciones
+from pulseras_esd_todo.pulseras_esd import pulseras_asignaciones
 
 def control_asignaciones(root):
     asignaciones_window = tk.Toplevel()  # Crear una nueva ventana

@@ -2,9 +2,10 @@ import tkinter as tk
 from common import *
 from settings.conf_ventana import configurar_ventana
 from settings.__init__ import *  # Importar los paths
-from pulseras_esd.registrar_pulsera import abrir_ventana_registro  # Importamos la función para abrir la ventana de registro
+from pulseras_esd_todo.registrar_pulsera import abrir_ventana_registro  # Importamos la función para abrir la ventana de registro
 from submains_asignaciones.usuario_a_asignar import mostrar_usuarios_disponibles
 from strings_consultas_db import obtener_tamanos_unicos, obtener_tipos_unicos
+from pulseras_esd_todo.asignar_pulseras import ventana_asignar_pulseras
 
 def pulseras_asignaciones(asignaciones_window, root):
     pulseras_asignaciones = tk.Toplevel(root)
@@ -29,7 +30,7 @@ def pulseras_asignaciones(asignaciones_window, root):
 
     # Crear el botón "Asignar una Pulsera"
     btn_asignar_pulsera = tk.Button(pulseras_asignaciones, text="Asignar una Pulsera",
-                                    command=mostrar_usuarios_disponibles,
+                                    command=lambda: ventana_asignar_pulseras(pulseras_asignaciones),
                                     font=("Arial", 14), bg="green", fg="white", height=2, width=20)
     btn_asignar_pulsera.place(relx=0.5, rely=0.5, anchor='center')
 

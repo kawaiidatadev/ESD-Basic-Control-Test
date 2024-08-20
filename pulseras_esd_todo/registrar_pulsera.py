@@ -1,6 +1,6 @@
 from common import *
 from settings.conf_ventana import configurar_ventana
-from settings.__init__ import *  # Importar los paths
+from settings.__init__ import db_path  # Importar los paths
 
 def abrir_ventana_registro(pulseras_asignaciones):
     ventana_registro = tk.Toplevel(pulseras_asignaciones)
