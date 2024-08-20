@@ -18,6 +18,12 @@ inon_path = r'\\mercury\Mtto_Prod\00_Departamento_Mantenimiento\ESD\Software\Rec
 # Default document PDF "ANSI S20.20" default
 document_path = r'\\10.0.0.9\Mtto_Prod\00_Departamento_Mantenimiento\ESD\Documentos\Manuales\97_ELE_0_ANSI-ESD-S20.20-2014.pdf'
 
+# Plantilla de bata ESD
+plantilla_bata_esd = r'\\mercury\Mtto_Prod\00_Departamento_Mantenimiento\ESD\Software\Recurses\Plantillas\bata_esd.xlsm'
+
+# Plantilla de bata Polar ESD
+plantilla_bata_polar_esd = r'\\mercury\Mtto_Prod\00_Departamento_Mantenimiento\ESD\Software\Recurses\Plantillas\bata_polar_esd.xlsm'
+
 imagen_fondo_registro_batas = r'\\mercury\Mtto_Prod\00_Departamento_Mantenimiento\ESD\Software\Recurses\registro_batas.png'
 
 menu_azusa = r'\\mercury\Mtto_Prod\00_Departamento_Mantenimiento\ESD\Software\Recurses\azusa.png'
