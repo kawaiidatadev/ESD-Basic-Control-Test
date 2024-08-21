@@ -46,15 +46,18 @@ def eliminar_elementos_relacionados(usuario_seleccionado, ventana_personal_esd, 
                 cursor = conn.cursor()
 
                 cambios_realizados = []
+                actualizaciones_personal = {
+                    'bata_estatus': 'Baja',
+                    'bata_polar_estatus': 'Baja',
+                    'pulsera_estatus': 'Baja',
+                    'talonera_estatus': 'Baja'
+                }
 
                 # Actualizar el estado de los elementos en esd_items
                 for elemento in elementos:
                     item_id = elemento['item_id']
                     accion = elemento['accion']
-                    if accion == "Eliminar":
-                        nuevo_estado = "Eliminado"  # Cambia según lo que consideres para "Eliminar"
-                    elif accion == "Desasignar":
-                        nuevo_estado = "Desasignado"  # Cambia según lo que consideres para "Desasignar"
+                    nuevo_estado = 'Baja'  # Cambia el estado por defecto a 'Baja'
 
                     cursor.execute("""
                         UPDATE esd_items
@@ -64,18 +67,44 @@ def eliminar_elementos_relacionados(usuario_seleccionado, ventana_personal_esd, 
 
                     cambios_realizados.append(f"Elemento ID {item_id}: {accion}")
 
+                    # Actualizar estatus en personal_esd
+                    tipo_elemento = cursor.execute("""
+                        SELECT tipo_elemento
+                        FROM esd_items
+                        WHERE id = ?
+                    """, (item_id,)).fetchone()[0]
+
+                    if tipo_elemento == 'Bata':
+                        actualizaciones_personal['bata_estatus'] = nuevo_estado
+                    elif tipo_elemento == 'Bata Polar':
+                        actualizaciones_personal['bata_polar_estatus'] = nuevo_estado
+                    elif tipo_elemento == 'Pulsera':
+                        actualizaciones_personal['pulsera_estatus'] = nuevo_estado
+                    elif tipo_elemento == 'Talonera':
+                        actualizaciones_personal['talonera_estatus'] = nuevo_estado
+
                 # Eliminar todos los registros relacionados en usuarios_elementos
                 cursor.execute("""
                     DELETE FROM usuarios_elementos
                     WHERE usuario_id = ?
                 """, (usuario_seleccionado,))
 
-                # Actualizar el estatus_usuario en personal_esd
+                # Actualizar los estatus del usuario en personal_esd
                 cursor.execute("""
                     UPDATE personal_esd
-                    SET estatus_usuario = 'Baja'
+                    SET estatus_usuario = 'Baja',
+                        bata_estatus = ?,
+                        bata_polar_estatus = ?,
+                        pulsera_estatus = ?,
+                        talonera_estatus = ?
                     WHERE id = ?
-                """, (usuario_seleccionado,))
+                """, (
+                    actualizaciones_personal['bata_estatus'],
+                    actualizaciones_personal['bata_polar_estatus'],
+                    actualizaciones_personal['pulsera_estatus'],
+                    actualizaciones_personal['talonera_estatus'],
+                    usuario_seleccionado
+                ))
 
                 conn.commit()
                 conn.close()
