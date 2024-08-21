@@ -117,9 +117,10 @@ def desasignar_bata(ventana_batas_esd, root):
                         esd_item_id = resultado[0]
                         cursor.execute("UPDATE personal_esd SET bata_estatus = 'Sin asignar' WHERE id = ?",
                                        (usuario_id,))
-                        eliminar = messagebox.askquestion("Eliminar Bata", "¿Desea eliminar la Bata ESD?",
+                        decision = messagebox.askquestion("Acción sobre la Bata",
+                                                          "¿Desea eliminar la Bata ESD? Si selecciona No se desasignara.",
                                                           icon='warning')
-                        if eliminar == 'yes':
+                        if decision == 'yes':
                             cursor.execute("UPDATE esd_items SET estatus = 'Eliminada' WHERE id = ?", (esd_item_id,))
                         else:
                             cursor.execute("UPDATE esd_items SET estatus = 'Desasignada' WHERE id = ?", (esd_item_id,))
@@ -136,9 +137,10 @@ def desasignar_bata(ventana_batas_esd, root):
                         esd_item_id = resultado[0]
                         cursor.execute("UPDATE personal_esd SET bata_polar_estatus = 'Sin asignar' WHERE id = ?",
                                        (usuario_id,))
-                        eliminar = messagebox.askquestion("Eliminar Bata", "¿Desea eliminar la Bata Polar ESD?",
+                        decision = messagebox.askquestion("Acción sobre la Bata Polar",
+                                                          "¿Desea eliminar la Bata Polar ESD o solo desasignarla?",
                                                           icon='warning')
-                        if eliminar == 'yes':
+                        if decision == 'yes':
                             cursor.execute("UPDATE esd_items SET estatus = 'Eliminada' WHERE id = ?", (esd_item_id,))
                         else:
                             cursor.execute("UPDATE esd_items SET estatus = 'Desasignada' WHERE id = ?", (esd_item_id,))

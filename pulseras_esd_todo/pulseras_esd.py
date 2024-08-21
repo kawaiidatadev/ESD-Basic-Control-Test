@@ -1,4 +1,3 @@
-import tkinter as tk
 from common import *
 from settings.conf_ventana import configurar_ventana
 from settings.__init__ import *  # Importar los paths
