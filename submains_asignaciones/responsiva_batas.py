@@ -75,9 +75,11 @@ def generar_responsiba(usuario_id, nombre_usuario, area, linea, tipo_elemento, n
     wb_original.save(ruta_plantilla)
     print(f"Número en la plantilla original actualizado")
 
-    # Abrir el archivo automáticamente
+    # Abrir el archivo automáticamente y maximizado usando pywin32
     if os.name == 'nt':  # Para Windows
-        os.startfile(archivo_destino)
-    else:  # Para macOS y Linux
-        os.system(
-            f'open "{archivo_destino}"' if os.name == 'posix' and sys.platform == 'darwin' else f'xdg-open "{archivo_destino}"')
+        excel = win32.gencache.EnsureDispatch('Excel.Application')
+        excel.Visible = True
+        wb = excel.Workbooks.Open(archivo_destino)
+        excel.WindowState = win32.constants.xlMaximized
+    else:
+        print("Este método solo está disponible para Windows")
