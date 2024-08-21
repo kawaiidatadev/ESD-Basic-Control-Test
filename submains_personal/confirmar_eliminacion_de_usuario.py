@@ -1,4 +1,7 @@
 from common.__init__ import *
+from submains_personal.elimiacion_de_relaciones import eliminar_elementos_relacionados
+
+
 def cargar_datos(cursor, tree, label_pagina, btn_siguiente, btn_anterior, area, linea, page_size, current_page, cargar_datos_usuario_eliminar):
     cursor.execute(cargar_datos_usuario_eliminar, (area, linea, page_size, (current_page - 1) * page_size))
     rows = cursor.fetchall()
@@ -28,7 +31,7 @@ def cargar_datos(cursor, tree, label_pagina, btn_siguiente, btn_anterior, area, 
         btn_anterior.config(state="disabled")
 
 
-def confirmar_eliminacion(tree, ventana_eliminar, db_path):
+def confirmar_eliminacion(tree, ventana_eliminar, db_path, ventana_personal_esd, root):
     conn = None  # Asegúrate de inicializar conn aquí
     try:
         # Obtener el ID seleccionado en el Treeview
@@ -44,19 +47,8 @@ def confirmar_eliminacion(tree, ventana_eliminar, db_path):
         # Preguntar si realmente desea eliminar al usuario
         respuesta = messagebox.askyesno("Confirmar Eliminación", "¿Estás seguro de que deseas eliminar este usuario?")
         if respuesta:
-            conn = sqlite3.connect(db_path)  # Conectar a la base de datos
-            cursor = conn.cursor()
-
-            # Ejecutar la consulta de actualización
-            cursor.execute("UPDATE personal_esd SET estatus_usuario = 'Baja' WHERE id = ?", (usuario_seleccionado,))
-            conn.commit()
-
-            # Verificar si se actualizó alguna fila
-            if cursor.rowcount == 0:
-                messagebox.showwarning("Advertencia", "No se encontró ningún usuario con ese ID.")
-            else:
-                messagebox.showinfo("Éxito", "El usuario ha sido eliminado.")
-                ventana_eliminar.destroy()  # Cerrar la ventana
+            # Llamar a la función para actualizar el estatus del usuario
+            eliminar_elementos_relacionados(usuario_seleccionado, ventana_personal_esd, root, ventana_eliminar)
 
     except sqlite3.Error as e:
         # Manejo de errores de la base de datos

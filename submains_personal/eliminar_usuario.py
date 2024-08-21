@@ -103,7 +103,7 @@ def eliminar_usuario(root, ventana_personal_esd):
 
     # Botón para eliminar usuario
     boton_eliminar = tk.Button(ventana_eliminar, text="Eliminar Usuario",
-                               command=lambda: confirmar_eliminacion(tree, ventana_eliminar, db_path))
+                               command=lambda: confirmar_eliminacion(tree, ventana_eliminar, db_path, ventana_personal_esd, root))
     boton_eliminar.pack(pady=10)
 
     # Crear el botón "Salir"

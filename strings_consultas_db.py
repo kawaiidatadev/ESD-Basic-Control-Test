@@ -81,3 +81,10 @@ def obtener_usuarios_con_pulseras():
     resultados = cursor.fetchall()
     conn.close()
     return resultados
+
+tipos_elementos_del_usuario_id ="""
+                SELECT esd_items.id, esd_items.tipo_elemento
+                FROM usuarios_elementos
+                JOIN esd_items ON usuarios_elementos.esd_item_id = esd_items.id
+                WHERE usuarios_elementos.usuario_id = ?
+            """
