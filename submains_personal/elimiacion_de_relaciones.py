@@ -47,17 +47,20 @@ def eliminar_elementos_relacionados(usuario_seleccionado, ventana_personal_esd, 
 
                 cambios_realizados = []
                 actualizaciones_personal = {
-                    'bata_estatus': 'Baja',
-                    'bata_polar_estatus': 'Baja',
-                    'pulsera_estatus': 'Baja',
-                    'talonera_estatus': 'Baja'
+                    'bata_estatus': 'Desasignado',
+                    'bata_polar_estatus': 'Desasignado',
+                    'pulsera_estatus': 'Desasignado',
+                    'talonera_estatus': 'Desasignado'
                 }
 
                 # Actualizar el estado de los elementos en esd_items
                 for elemento in elementos:
                     item_id = elemento['item_id']
                     accion = elemento['accion']
-                    nuevo_estado = 'Baja'  # Cambia el estado por defecto a 'Baja'
+                    if accion == "Eliminar":
+                        nuevo_estado = "Eliminado"  # Cambia según lo que consideres para "Eliminar"
+                    elif accion == "Desasignar":
+                        nuevo_estado = "Desasignado"  # Cambia según lo que consideres para "Desasignar"
 
                     cursor.execute("""
                         UPDATE esd_items
