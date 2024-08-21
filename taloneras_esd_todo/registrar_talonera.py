@@ -2,7 +2,7 @@ from common.__init__ import *
 from settings.conf_ventana import configurar_ventana
 from settings.__init__ import db_path  # Importar la ruta de la base de datos
 
-
+# Funcion para registrar taloneras
 def registrar_talonera(taloneras_asignaciones, root):
     ventana_registro = tk.Toplevel(root)
     taloneras_asignaciones.withdraw()  # Ocultar la ventana anterior
