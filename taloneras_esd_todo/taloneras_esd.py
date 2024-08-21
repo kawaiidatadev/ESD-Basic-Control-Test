@@ -1,6 +1,7 @@
 from common import *
 from settings.conf_ventana import configurar_ventana
 from taloneras_esd_todo.registrar_talonera import registrar_talonera
+from taloneras_esd_todo.asignar_talonera import asignaciones_taloneras
 
 
 def taloneras_asignaciones(asignaciones_window, root):
@@ -28,9 +29,9 @@ def taloneras_asignaciones(asignaciones_window, root):
                               font=("Arial", 12), bg="green", fg="white", height=2, width=20)
 
     # Función para asignar talonera
+    # Función para asignar talonera
     def asignar_talonera():
-        print("Asignar talonera")
-        # Aquí puedes agregar la lógica para asignar una talonera
+        asignaciones_taloneras(taloneras_asignaciones, root)
 
     # Función para desasignar talonera
     def desasignar_talonera():
