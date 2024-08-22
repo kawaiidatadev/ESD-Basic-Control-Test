@@ -2,6 +2,8 @@ from common import *
 from settings.conf_ventana import configurar_ventana
 from taloneras_esd_todo.registrar_talonera import registrar_talonera
 from taloneras_esd_todo.asignar_talonera import asignaciones_taloneras
+from taloneras_esd_todo.desasigaciones_taloneras import ventana_desasignar_taloneras  # Asegúrate de importar la función
+
 
 
 def taloneras_asignaciones(asignaciones_window, root):
@@ -35,8 +37,7 @@ def taloneras_asignaciones(asignaciones_window, root):
 
     # Función para desasignar talonera
     def desasignar_talonera():
-        print("Desasignar talonera")
-        # Aquí puedes agregar la lógica para desasignar una talonera
+        ventana_desasignar_taloneras(taloneras_asignaciones)  # Llama a la función de desasignación
 
 
     btn_asignar = tk.Button(taloneras_asignaciones, text="Asignar Talonera", command=asignar_talonera,
