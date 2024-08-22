@@ -1,7 +1,7 @@
 from common.__init__ import *
 from settings.conf_ventana import configurar_ventana
 from settings.__init__ import db_path  # Importar la ruta de la base de datos
-
+from taloneras_esd_todo.responsiva_taloneras import generar_responsiva_taloneras
 def asignaciones_taloneras(taloneras_asignaciones, root):
     try:
         # Crear una nueva ventana para la asignación de taloneras
@@ -130,17 +130,34 @@ def asignaciones_taloneras(taloneras_asignaciones, root):
             # Eliminar el usuario asignado de la tabla
             tree.delete(selected_item)
 
-            messagebox.showinfo("Éxito", f"Talonera asignada exitosamente al usuario {user_id}.")
+            # Obtener los datos necesarios para generar la responsiva
+            cursor.execute("""
+                SELECT nombre_usuario, area, linea, puesto 
+                FROM personal_esd 
+                WHERE id = ?
+            """, (user_id,))
+            usuario_data = cursor.fetchone()
+
+            # Generar la responsiva para la talonera asignada
+            generar_responsiva_taloneras(
+                usuario_id=user_id,
+                nombre_usuario=usuario_data[0],
+                area=usuario_data[1],
+                linea=usuario_data[2],
+                tipo_elemento="Talonera ESD"
+            )
+
+            messagebox.showinfo("Éxito", f"Talonera asignada exitosamente al usuario {usuario_data[0]}.")
 
         except sqlite3.Error as e:
             conn.rollback()
-            messagebox.showerror("Error de base de datos", f"Se produjo un error al interactuar con la base de datos: {e}")
+            messagebox.showerror("Error de base de datos",
+                                 f"Se produjo un error al interactuar con la base de datos: {e}")
         except Exception as e:
             messagebox.showerror("Error inesperado", f"Se produjo un error inesperado: {e}")
         finally:
             cursor.close()
             conn.close()
-
 
     # Botón para salir
     btn_salir = tk.Button(ventana_asignaciones, text="Salir", command=salir_programa, font=("Arial", 14), bg="red",
