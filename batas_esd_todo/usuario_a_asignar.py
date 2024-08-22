@@ -1,6 +1,6 @@
 from settings.__init__ import *  # Importar los paths
 from settings.conf_ventana import configurar_ventana
-from submains_asignaciones.responsiva_batas import generar_responsiba
+from batas_esd_todo.responsiva_batas import generar_responsiba
 
 def mostrar_usuarios_disponibles(bata_id, asignar_batas_esd, tipo_elemento):
     # Crear la ventana

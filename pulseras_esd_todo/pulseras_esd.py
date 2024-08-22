@@ -2,7 +2,7 @@ from common import *
 from settings.conf_ventana import configurar_ventana
 from settings.__init__ import *  # Importar los paths
 from pulseras_esd_todo.registrar_pulsera import abrir_ventana_registro  # Importamos la función para abrir la ventana de registro
-from submains_asignaciones.usuario_a_asignar import mostrar_usuarios_disponibles
+from batas_esd_todo.usuario_a_asignar import mostrar_usuarios_disponibles
 from strings_consultas_db import obtener_tamanos_unicos, obtener_tipos_unicos
 from pulseras_esd_todo.asignar_pulseras import ventana_asignar_pulseras
 from pulseras_esd_todo.desasignar_pulseras import ventana_desasignar_pulseras
