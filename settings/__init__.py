@@ -24,6 +24,11 @@ menu_azusa = r'\\mercury\Mtto_Prod\00_Departamento_Mantenimiento\ESD\Software\Re
 
 path_imagen_evidencias = r'\\mercury\Mtto_Prod\00_Departamento_Mantenimiento\ESD\Software\Recurses\u149.png'
 
+path_imagen_registro_personal = r'\\mercury\Mtto_Prod\00_Departamento_Mantenimiento\ESD\Software\Recurses\umi.png'
+
+path_imagen_consulta_personal = r'\\mercury\Mtto_Prod\00_Departamento_Mantenimiento\ESD\Software\Recurses\shinobu.png'
+
+path_imagen_eliminar_personal = r'\\mercury\Mtto_Prod\00_Departamento_Mantenimiento\ESD\Software\Recurses\koneko.png'
 def poner_imagen_de_fondo(ventana, path_imagen, ancho=None, alto=None, x=0, y=0, resize=True):
     # Cargar la imagen de fondo
     imagen_fondo = Image.open(path_imagen)

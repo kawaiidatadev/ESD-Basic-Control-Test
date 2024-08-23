@@ -1,6 +1,6 @@
 from common import *
 from settings.conf_ventana import configurar_ventana
-from settings.__init__ import db_path
+from settings.__init__ import db_path, poner_imagen_de_fondo, path_imagen_consulta_personal
 from strings_consultas_db import consulta_de_usuarios
 
 
@@ -9,6 +9,8 @@ def consultar_usuario(root, ventana_personal_esd):
     ventana_personal_esd.withdraw()
     ventana_consulta = tk.Toplevel(root)
     configurar_ventana(ventana_consulta, "Consulta de Usuarios ESD")
+
+    poner_imagen_de_fondo(ventana_consulta, path_imagen_consulta_personal, 600, 450, x=80, y=300)
 
     # Conexión a la base de datos
     conn = sqlite3.connect(db_path)

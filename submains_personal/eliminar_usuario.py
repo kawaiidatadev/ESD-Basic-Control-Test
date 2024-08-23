@@ -1,6 +1,6 @@
 # En eliminar_usuario.py
 from common import *
-from settings.__init__ import db_path
+from settings.__init__ import db_path, poner_imagen_de_fondo, path_imagen_eliminar_personal
 from submains_personal.confirmar_eliminacion_de_usuario import confirmar_eliminacion, cargar_datos
 from settings.conf_ventana import configurar_ventana
 from strings_consultas_db import cargar_datos_usuario_eliminar
@@ -11,6 +11,8 @@ def eliminar_usuario(root, ventana_personal_esd):
     ventana_personal_esd.withdraw()  # Oculta la ventana de Personal ESD
     ventana_eliminar = tk.Toplevel(root)  # Crear una nueva ventana hija de root
     configurar_ventana(ventana_eliminar, "Eliminar Usuario")
+
+    poner_imagen_de_fondo(ventana_eliminar, path_imagen_eliminar_personal, 500, 200, x=80, y=0)
 
     # Conexión a la base de datos
     conn = sqlite3.connect(db_path)

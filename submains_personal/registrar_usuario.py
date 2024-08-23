@@ -1,13 +1,14 @@
 from common import *
 from settings.conf_ventana import configurar_ventana
-from settings import db_path
+from settings import db_path, poner_imagen_de_fondo, path_imagen_registro_personal
 from submains_personal.registrar_usuario_db import guardar_usuario
 
 # Función para abrir la ventana de registro de usuarios
 def registrar_usuario(root, ventana_personal_esd):  # Agrega ventana_personal_esd como argumento
     ventana_personal_esd.withdraw()  # Oculta la ventana de Personal ESD
     ventana_registro = tk.Toplevel(root)  # Crear una nueva ventana
-    configurar_ventana(ventana_registro, "Registro de Usuario", "1000x500")
+    configurar_ventana(ventana_registro, "Registro de Usuario", "1100x500")
+
 
     # Variables para almacenar las entradas adicionales
     var_rol = tk.StringVar(value="Seleccione una opción")
@@ -19,10 +20,14 @@ def registrar_usuario(root, ventana_personal_esd):  # Agrega ventana_personal_es
     marco = tk.Frame(ventana_registro, padx=20, pady=20)
     marco.pack(padx=10, pady=10, fill=tk.BOTH, expand=True)
 
+    poner_imagen_de_fondo(ventana_registro, path_imagen_registro_personal, 200, 300, x=920, y=200)
+
     # Campo para el nombre de usuario
     tk.Label(marco, text="Nombre de Usuario:", font=("Arial", 12, "bold")).grid(row=0, column=0, padx=10, pady=10, sticky="e")
     entry_nombre_usuario = tk.Entry(marco, font=("Arial", 12), width=50)
     entry_nombre_usuario.grid(row=0, column=1, padx=10, pady=10, sticky="w")
+
+
 
     # Función para salir de la ventana
     def salir_registro():
