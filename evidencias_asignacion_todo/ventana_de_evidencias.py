@@ -1,12 +1,12 @@
 from common.__init__ import *
 from settings.conf_ventana import configurar_ventana
-from settings.__init__ import db_path
+from settings.__init__ import db_path, poner_imagen_de_fondo, path_imagen_evidencias
 
 def evidencias_asignacion(asignaciones_window, root):
     ventana_evidencias = tk.Toplevel(asignaciones_window)
     asignaciones_window.withdraw()
     configurar_ventana(ventana_evidencias, "Evidencias de asignaciones")
-
+    poner_imagen_de_fondo(ventana_evidencias, path_imagen_evidencias, 300, 300, x=500, y=500)
 
     # Conectar a la base de datos y obtener los elementos únicos de `tipo_elemento`
     try:

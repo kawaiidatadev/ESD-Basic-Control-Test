@@ -22,6 +22,7 @@ imagen_fondo_registro_batas = r'\\mercury\Mtto_Prod\00_Departamento_Mantenimient
 
 menu_azusa = r'\\mercury\Mtto_Prod\00_Departamento_Mantenimiento\ESD\Software\Recurses\azusa.png'
 
+path_imagen_evidencias = r'\\mercury\Mtto_Prod\00_Departamento_Mantenimiento\ESD\Software\Recurses\u149.png'
 
 def poner_imagen_de_fondo(ventana, path_imagen, ancho=None, alto=None, x=0, y=0, resize=True):
     # Cargar la imagen de fondo
