@@ -79,6 +79,9 @@ def generar_responsiva_taloneras(usuario_id, nombre_usuario, area, linea, tipo_e
             ws_datadb.cell(row=1, column=col_num, value=header)
             ws_datadb.cell(row=2, column=col_num, value=value)
 
+        # Agregar el ID del usuario en la celda H2
+        ws_datadb['H2'] = usuario_id
+
         # Guardar el archivo copiado
         wb.save(archivo_destino)
         print(f"Responsiva guardada como {archivo_destino}")

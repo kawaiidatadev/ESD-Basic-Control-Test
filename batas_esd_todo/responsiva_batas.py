@@ -59,10 +59,13 @@ def generar_responsiba(usuario_id, nombre_usuario, area, linea, tipo_elemento, n
         ("Número de Serie", numero_serie),
         ("Tamaño", tamaño)
     ]
+    # Agregar el ID del usuario en la celda H2
+    ws_datadb['H2'] = usuario_id
 
     for col_num, (header, value) in enumerate(encabezados, 1):
         ws_datadb.cell(row=1, column=col_num, value=header)
         ws_datadb.cell(row=2, column=col_num, value=value)
+
 
     # Guardar el archivo copiado
     wb.save(archivo_destino)
@@ -72,6 +75,7 @@ def generar_responsiba(usuario_id, nombre_usuario, area, linea, tipo_elemento, n
     wb_original = openpyxl.load_workbook(ruta_plantilla)
     ws_responsiva_original = wb_original['responsiva']
     ws_responsiva_original['I4'] = nuevo_numero
+
     wb_original.save(ruta_plantilla)
     print(f"Número en la plantilla original actualizado")
 
