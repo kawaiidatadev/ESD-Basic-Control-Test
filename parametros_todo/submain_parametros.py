@@ -2,6 +2,7 @@ from common import *
 from settings.conf_ventana import configurar_ventana
 from parametros_todo.registro_parametros import registrar_parametro
 from parametros_todo.modificacion_parametros import modificar_parametro
+from parametros_todo.eliminar_parametros import eliminar_parametro
 
 # Función para abrir la ventana de parámetros
 def parametros_medicion(root):
@@ -14,8 +15,7 @@ def parametros_medicion(root):
     buttons = [
         ("Registrar", lambda: registrar_parametro(ventana_parametros)),
         ("Editar", lambda: modificar_parametro(ventana_parametros)),
-        ("Consultar", print('Consultar')),
-        ("Eliminar", print('Eliminar'))
+        ("Eliminar", lambda: eliminar_parametro(ventana_parametros))
     ]
 
     for text, command in buttons:
