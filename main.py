@@ -1,9 +1,6 @@
-from common.__init__ import *  # Importa todas las librerías comunes.
-from settings.__init__ import *  # Importa todos los paths y funciones que manejan documentos.
 from db_exist import verify_db  # Importa la función para crear la base de datos si no existe.
-from submains.submain_parametros import *  # Importa la funcion del submenu de primer nivel de parametros
+from parametros_todo.submain_parametros import *  # Importa la funcion del submenu de primer nivel de parametros
 from submains.submain_personal_esd import *  # Importa la funcion del submenu de primer nivel de personal esd
-from settings.conf_ventana import configurar_ventana  # Importa una funcion de cofiguracion global de ventanas.
 from submains.submain_asignaciones import *
 
 #Verificamos la base de datos, si no existe la crea.
