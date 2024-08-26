@@ -29,6 +29,8 @@ path_imagen_registro_personal = r'\\mercury\Mtto_Prod\00_Departamento_Mantenimie
 path_imagen_consulta_personal = r'\\mercury\Mtto_Prod\00_Departamento_Mantenimiento\ESD\Software\Recurses\shinobu.png'
 
 path_imagen_eliminar_personal = r'\\mercury\Mtto_Prod\00_Departamento_Mantenimiento\ESD\Software\Recurses\koneko.png'
+
+imagen_fondo_desasignar_batas = r'\\mercury\Mtto_Prod\00_Departamento_Mantenimiento\ESD\Software\Recurses\azusa2.png'
 def poner_imagen_de_fondo(ventana, path_imagen, ancho=None, alto=None, x=0, y=0, resize=True):
     # Cargar la imagen de fondo
     imagen_fondo = Image.open(path_imagen)

@@ -10,8 +10,6 @@ def consultar_usuario(root, ventana_personal_esd):
     ventana_consulta = tk.Toplevel(root)
     configurar_ventana(ventana_consulta, "Consulta de Usuarios ESD")
 
-    poner_imagen_de_fondo(ventana_consulta, path_imagen_consulta_personal, 600, 450, x=80, y=300)
-
     # Conexión a la base de datos
     conn = sqlite3.connect(db_path)
     cursor = conn.cursor()
@@ -71,6 +69,8 @@ def consultar_usuario(root, ventana_personal_esd):
     # Colocar el Treeview y la barra de desplazamiento
     tree.pack(side=tk.LEFT)
     scrollbar.pack(side=tk.RIGHT, fill='y')
+
+    poner_imagen_de_fondo(ventana_consulta, path_imagen_consulta_personal, 600, 450, x=80, y=300)
 
     # Crear botones para la paginación
     def siguiente_pagina():

@@ -9,6 +9,8 @@ def desasignar_bata(ventana_batas_esd, root):
     ventana_batas_esd.withdraw()
     configurar_ventana(ventana_desasignar, "Desasignar Bata ESD")
 
+    poner_imagen_de_fondo(ventana_desasignar, imagen_fondo_desasignar_batas, 300, 600, x=500, y=270, )  # Aquí usas la variable de tu path
+
     table_frame = tk.Frame(ventana_desasignar)
     table_frame.pack(pady=20)
 
