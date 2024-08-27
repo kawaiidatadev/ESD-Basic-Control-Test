@@ -7,6 +7,8 @@ def registar_actividad(conf1):
     conf1.withdraw()  # Ocultar la ventana principal al abrir la ventana de parámetros
     configurar_ventana(re_act, "Registro de actividades")
 
+    username = getpass.getuser()
+
     # Función para salir del programa
     def salir_programa():
         re_act.withdraw()
@@ -62,13 +64,55 @@ def registar_actividad(conf1):
     fecha_inicio.grid(row=3, column=1, padx=10, pady=5)
     fecha_inicio.bind("<<DateEntrySelected>>", lambda e: fecha_inicio.set_date(datetime.now()) if fecha_inicio.get_date() < datetime.now().date() else None)
 
+
+    # Equipo de medición
+    tk.Label(main_frame, text="Equipo de medición:", **label_style).grid(row=4, column=0, sticky="e", padx=10, pady=5)
+    equipo_medicion = tk.Entry(main_frame, **entry_style)
+    equipo_medicion.grid(row=4, column=1, padx=10, pady=5)
+
     # Crear un Frame inferior para los botones
     bottom_frame = tk.Frame(re_act)
     bottom_frame.pack(side="bottom", pady=10, padx=20, fill='x')
 
-    # Botón de registrar
-    btn_registrar = tk.Button(bottom_frame, text="Registrar", command=lambda: recibir_datos_a_registrar_actividad(
-        nombre_actividad.get(), descripcion.get(), frecuencia.get(), fecha_inicio.get_date().strftime('%d/%m/%Y')), **button_style, bg="#007bff", fg="white")
+    # Función de validación
+    def validar_datos():
+        nombre = nombre_actividad.get().strip()
+        desc = descripcion.get().strip()
+        fecha = fecha_inicio.get_date()
+        equipo = equipo_medicion.get().strip()
+
+        # Verificar que el nombre de la actividad tenga al menos 3 caracteres y no sea solo números
+        if len(nombre) < 3 or nombre.isdigit():
+            messagebox.showerror("Error",
+                                 "El nombre de la actividad es inválido.")
+            return False
+
+        # Verificar que la descripción tenga al menos 5 caracteres y no sea solo números
+        if len(desc) < 5 or desc.isdigit():
+            messagebox.showerror("Error",
+                                 "La descripción es inválida.")
+            return False
+
+        # Verificar que la fecha no sea anterior a la fecha actual
+        if fecha < datetime.now().date():
+            messagebox.showerror("Error", "La fecha de inicio no puede ser anterior a la fecha actual.")
+            return False
+
+        # Verificar que el equipo de medición tenga al menos 3 caracteres y no sea solo números
+        if len(equipo) < 3 or equipo.isdigit():
+            messagebox.showerror("Error",
+                                 "El equipo de medición es inválido.")
+            return False
+
+        return True
+
+        # Botón de registrar
+
+    btn_registrar = tk.Button(bottom_frame, text="Registrar", command=lambda: (
+        recibir_datos_a_registrar_actividad(
+            nombre_actividad.get(), descripcion.get(), frecuencia.get(), fecha_inicio.get_date().strftime('%d/%m/%Y'),
+            equipo_medicion.get(), username)
+        if validar_datos() else None), **button_style, bg="#007bff", fg="white")
     btn_registrar.pack(side="left", padx=10)
 
     # Botón de salir
@@ -76,7 +120,6 @@ def registar_actividad(conf1):
     btn_salir.pack(side="right", padx=10)
 
     # Mostrar el nombre de usuario de Windows en la esquina superior derecha
-    username = getpass.getuser()
     tk.Label(re_act, text=f"Usuario: {username}", font=("Arial", 10, "italic"), anchor='e').pack(side="top", fill='x', padx=10, pady=5)
 
     # Mostrar la fecha y hora actual en la esquina inferior derecha
