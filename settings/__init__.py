@@ -36,6 +36,10 @@ imagen_registro_parametros = r'\\mercury\Mtto_Prod\00_Departamento_Mantenimiento
 
 imagen_modificacion_parametros = r'\\mercury\Mtto_Prod\00_Departamento_Mantenimiento\ESD\Software\Recurses\usagi_2.png'
 
+imagen_sub1_actividades = r'\\mercury\Mtto_Prod\00_Departamento_Mantenimiento\ESD\Software\Recurses\homu1.png'
+
+imagen_sub2_actividades = r'\\mercury\Mtto_Prod\00_Departamento_Mantenimiento\ESD\Software\Recurses\game1.png'
+
 def poner_imagen_de_fondo(ventana, path_imagen, ancho=None, alto=None, x=0, y=0, resize=True):
     # Cargar la imagen de fondo
     imagen_fondo = Image.open(path_imagen)

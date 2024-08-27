@@ -2,6 +2,7 @@ from db_exist import verify_db  # Importa la función para crear la base de dato
 from parametros_todo.submain_parametros import *  # Importa la funcion del submenu de primer nivel de parametros
 from submains.submain_personal_esd import *  # Importa la funcion del submenu de primer nivel de personal esd
 from submains.submain_asignaciones import *
+from actividades_todo.sub_ventana1 import ven1
 
 #Verificamos la base de datos, si no existe la crea.
 verify_db()
@@ -34,7 +35,7 @@ label_img.bind("<Button-1>", lambda e: manejar_clic_imagen(e, label_img))
 buttons = [
     ("Parámetros de Medición", lambda: parametros_medicion(root)),
     ("Reporte Central", print("reporte central")),
-    ("Actividades", print("actividades")),
+    ("Actividades", lambda: ven1(root)),
     ("Control de Asignaciones de Equipos", lambda: control_asignaciones(root)),
     ("Personal ESD", lambda: personal_esd(root))
 ]

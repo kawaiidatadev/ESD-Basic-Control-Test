@@ -1,0 +1,2 @@
+def recibir_datos_a_registrar_actividad(nombre_actividad, descripcion, frecuencia, fecha_inicio):
+    print('Datos recividos para registrar nueva actividad: ' + nombre_actividad + '  ' + descripcion + '  '  + frecuencia + '  '  + fecha_inicio)
