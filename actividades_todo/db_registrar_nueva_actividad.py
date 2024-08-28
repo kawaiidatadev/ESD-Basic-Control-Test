@@ -1,7 +1,6 @@
 from common.__init__ import *
 from settings.__init__ import db_path  # Asegúrate de que la ruta esté correcta
 
-
 # Función para calcular la próxima fecha basada en la frecuencia
 def calcular_proxima_fecha(fecha_ultima, frecuencia):
     if frecuencia == "Diario":
@@ -31,7 +30,7 @@ def calcular_proxima_fecha(fecha_ultima, frecuencia):
     elif frecuencia == "Cada 11 meses":
         return fecha_ultima + relativedelta(months=11)
     elif frecuencia == "Anual":
-        return fecha_ultima + relativedelta(years=1)Anual
+        return fecha_ultima + relativedelta(years=1)
     elif frecuencia == "Cada dos años":
         return fecha_ultima + relativedelta(years=2)
     elif frecuencia == "Cada 3 años":
@@ -44,8 +43,9 @@ def calcular_proxima_fecha(fecha_ultima, frecuencia):
 
 # Función para registrar una nueva actividad
 def recibir_datos_a_registrar_actividad(
-        nombre_actividad, descripcion, frecuencia, fecha_inicio, equipo_medicion, username):
+        nombre_actividad, descripcion, frecuencia, fecha_inicio, equipo_medicion, username, re_act, conf1):
     try:
+        re_act.withdraw()  # Ocultar la ventana principal al abrir la ventana de parámetros
         # Zona horaria de Guadalajara, México
         tz = pytz.timezone('America/Mexico_City')
         fecha_registro = datetime.now(tz).strftime('%Y-%m-%d %H:%M:%S')
@@ -96,6 +96,8 @@ def recibir_datos_a_registrar_actividad(
         conn.close()
 
         messagebox.showinfo("Éxito", f"Actividad {nombre_actividad} registrada exitosamente.")
+        conf1.deiconify()
+
 
     except sqlite3.Error as e:
         messagebox.showerror("Error de base de datos", f"Ha ocurrido un error con la base de datos: {e}")

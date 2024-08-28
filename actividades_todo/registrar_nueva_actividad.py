@@ -111,7 +111,7 @@ def registar_actividad(conf1):
     btn_registrar = tk.Button(bottom_frame, text="Registrar", command=lambda: (
         recibir_datos_a_registrar_actividad(
             nombre_actividad.get(), descripcion.get(), frecuencia.get(), fecha_inicio.get_date().strftime('%d/%m/%Y'),
-            equipo_medicion.get(), username)
+            equipo_medicion.get(), username, re_act, conf1)
         if validar_datos() else None), **button_style, bg="#007bff", fg="white")
     btn_registrar.pack(side="left", padx=10)
 
