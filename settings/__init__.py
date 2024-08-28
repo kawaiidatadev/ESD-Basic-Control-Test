@@ -40,6 +40,8 @@ imagen_sub1_actividades = r'\\mercury\Mtto_Prod\00_Departamento_Mantenimiento\ES
 
 imagen_sub2_actividades = r'\\mercury\Mtto_Prod\00_Departamento_Mantenimiento\ESD\Software\Recurses\game1.png'
 
+imagen_editar_actividad1 = r'\\mercury\Mtto_Prod\00_Departamento_Mantenimiento\ESD\Software\Recurses\nii.png'
+
 def poner_imagen_de_fondo(ventana, path_imagen, ancho=None, alto=None, x=0, y=0, resize=True):
     # Cargar la imagen de fondo
     imagen_fondo = Image.open(path_imagen)
