@@ -1,6 +1,7 @@
 from common.__init__ import *
 from settings.conf_ventana import configurar_ventana
 from settings.__init__ import db_path
+from actividades_todo.procesos_de_actividades import cumplimiento_4_2_1
 
 def cumplimiento_4_2(sub_ventana_act):
     sub_ventana_cumplimiento = tk.Toplevel()  # Crear una nueva ventana
@@ -70,7 +71,7 @@ def cumplimiento_4_2(sub_ventana_act):
         selected_item = tree.selection()
         if selected_item:
             actividad_id = tree.item(selected_item)["values"][0]
-            print(f"nueva ventana pendiente para ID: {actividad_id}")
+            cumplimiento_4_2_1(sub_ventana_cumplimiento, actividad_id)  # Llamar a la función con los dos argumentos
 
     # Crear botón "Ir a detalles" deshabilitado al inicio
     btn_ir_a_detalles = tk.Button(sub_ventana_cumplimiento, text="Ir a detalles", command=abrir_nueva_ventana,

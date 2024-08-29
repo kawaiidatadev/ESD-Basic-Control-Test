@@ -88,3 +88,13 @@ tipos_elementos_del_usuario_id ="""
                 JOIN esd_items ON usuarios_elementos.esd_item_id = esd_items.id
                 WHERE usuarios_elementos.usuario_id = ?
             """
+
+# Consulta para obtener los datos ordenados alfabéticamente por nombre
+consulta_de_iniciar_proceso_1 = """
+        SELECT esd_items.numero_serie, personal_esd.nombre_usuario, esd_items.tipo_elemento, personal_esd.area, personal_esd.linea, esd_items.comentarios
+        FROM usuarios_elementos
+        JOIN esd_items ON usuarios_elementos.esd_item_id = esd_items.id
+        JOIN personal_esd ON usuarios_elementos.usuario_id = personal_esd.id
+        WHERE LOWER(esd_items.tipo_elemento) LIKE '%bata%'
+        ORDER BY personal_esd.nombre_usuario
+        """

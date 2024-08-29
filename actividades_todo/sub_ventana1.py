@@ -10,7 +10,7 @@ def ven1(root):
     configurar_ventana(sub_ventana_act, "Sub menú de actividades")
 
     # Aplicar la imagen de fondo
-    poner_imagen_de_fondo(sub_ventana_act, imagen_sub1_actividades)
+    poner_imagen_de_fondo(sub_ventana_act, imagen_sub1_actividades, 700, 700, 40, 10)
 
     # Función para salir del programa
     def salir_programa():
