@@ -3,6 +3,8 @@ from settings.conf_ventana import configurar_ventana
 from actividades_todo.registrar_nueva_actividad import registar_actividad
 from settings.__init__ import poner_imagen_de_fondo, imagen_sub2_actividades
 from actividades_todo.editar_actividad1 import editar_act
+from actividades_todo.elim_actividades1 import eliminar_act
+
 def conf_a1(sub_ventana_act):
     conf1 = tk.Toplevel()  # Crear una nueva ventana
     sub_ventana_act.withdraw()  # Ocultar la ventana principal al abrir la ventana de parámetros
@@ -37,6 +39,10 @@ def conf_a1(sub_ventana_act):
                            bg="#28a745", fg="white", **button_style)
     btn_editar.grid(row=0, column=1, padx=10, pady=10)
 
+    # Botón de Eliminar Actividad
+    btn_eliminar = tk.Button(main_frame, text="Eliminar actividad", command=lambda: eliminar_act(conf1),
+                           bg="#2baecb", fg="white", **button_style)
+    btn_eliminar.grid(row=0, column=2, padx=10, pady=10)
 
     # Crear un Frame inferior para el botón de salir
     bottom_frame = tk.Frame(conf1, bg='')  # Sin bg transparente
