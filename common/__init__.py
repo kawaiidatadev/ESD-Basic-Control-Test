@@ -17,3 +17,4 @@ import time
 import getpass
 from tkcalendar import DateEntry
 from dateutil.relativedelta import relativedelta
+import tkinter.font as tkfont

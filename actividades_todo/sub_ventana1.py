@@ -2,6 +2,7 @@ from common.__init__ import *
 from settings.conf_ventana import configurar_ventana
 from actividades_todo.conf_actividades1 import conf_a1
 from settings.__init__ import poner_imagen_de_fondo, imagen_sub1_actividades
+from actividades_todo.cumplimiento_act1 import cumplimiento_4_2
 
 def ven1(root):
     sub_ventana_act = tk.Toplevel()  # Crear una nueva ventana
@@ -35,12 +36,14 @@ def ven1(root):
 
     # Botón de Configuración de Actividades
     btn_conf_actividades = tk.Button(main_frame, text="Configuración de actividades",
-                                     command=lambda: conf_a1(sub_ventana_act), bg="#007bff", fg="white",
+                                     command=lambda: conf_a1(sub_ventana_act),
+                                     bg="#007bff", fg="white",
                                      **button_style)
     btn_conf_actividades.grid(row=0, column=0, padx=5, pady=5)
 
     # Botón de Cumplimiento de Actividades
     btn_cumplimiento = tk.Button(main_frame, text="Cumplimiento de actividades",
+                                 command=lambda: cumplimiento_4_2(sub_ventana_act),
                                  bg="#28a745", fg="white", **button_style)
     btn_cumplimiento.grid(row=0, column=1, padx=5, pady=5)
 
