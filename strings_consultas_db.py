@@ -98,3 +98,12 @@ consulta_de_iniciar_proceso_1 = """
         WHERE LOWER(esd_items.tipo_elemento) LIKE '%bata%'
         ORDER BY personal_esd.nombre_usuario
         """
+
+# Obtener el ID del usuario y del elemento ESD en base a la asignación
+consulta_limpia_proceso_1 = '''
+        SELECT ue.usuario_id, ue.esd_item_id
+        FROM usuarios_elementos ue
+        JOIN personal_esd pe ON ue.usuario_id = pe.id
+        JOIN esd_items ei ON ue.esd_item_id = ei.id
+        WHERE pe.nombre_usuario = ? AND ei.tipo_elemento = ?
+    '''

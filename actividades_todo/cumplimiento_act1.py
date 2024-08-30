@@ -39,7 +39,7 @@ def cumplimiento_4_2(sub_ventana_act):
     frame_tabla.grid_rowconfigure(0, weight=1)
     frame_tabla.grid_columnconfigure(0, weight=1)
 
-    # Ajustar el ancho de las columnas automáticamente
+    # Función para ajustar el ancho de las columnas automáticamente
     def ajustar_columnas(event):
         for col in columnas:
             tree.column(col, width=tkfont.Font().measure(col.capitalize().replace("_", " ")))
@@ -51,15 +51,24 @@ def cumplimiento_4_2(sub_ventana_act):
 
     tree.bind("<Configure>", ajustar_columnas)
 
-    # Cargar los datos de la base de datos
-    conn = sqlite3.connect(db_path)
-    cursor = conn.cursor()
-    cursor.execute("SELECT id, nombre_actividad, frecuencia, fecha_ultima, proxima_fecha, estatus FROM actividades")
-    actividades = cursor.fetchall()
-    conn.close()
+    # Función para cargar y actualizar los datos en la tabla
+    def cargar_datos():
+        # Limpiar la tabla antes de cargar nuevos datos
+        for item in tree.get_children():
+            tree.delete(item)
 
-    for act in actividades:
-        tree.insert("", "end", values=act)
+        # Cargar los datos de la base de datos
+        conn = sqlite3.connect(db_path)
+        cursor = conn.cursor()
+        cursor.execute("SELECT id, nombre_actividad, frecuencia, fecha_ultima, proxima_fecha, estatus FROM actividades")
+        actividades = cursor.fetchall()
+        conn.close()
+
+        for act in actividades:
+            tree.insert("", "end", values=act)
+
+    # Cargar los datos al abrir la ventana
+    cargar_datos()
 
     # Función para salir del programa
     def salir_programa():
