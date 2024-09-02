@@ -1,6 +1,8 @@
 from common.__init__ import *
 from settings.__init__ import db_path
 from strings_consultas_db import consulta_limpia_proceso_1
+from actividades_todo.crear_pdf_proceso1 import pdf_proceso1
+
 
 def obtener_ids(usuario_nombre, elemento_esd):
     # Conectar a la base de datos
@@ -16,6 +18,7 @@ def obtener_ids(usuario_nombre, elemento_esd):
     # Retornar los IDs, si existen
     return result if result else (None, None)
 
+
 def proceso1_procesar_datos(datos, registros_count):
     # Verificar si el dato es un mensaje de error
     if isinstance(datos, str) and datos.startswith('Error'):
@@ -30,12 +33,22 @@ def proceso1_procesar_datos(datos, registros_count):
             if isinstance(item, dict) and item.get('Medición') != 'Seleccione':
                 usuario_nombre = item.get('Usuario')
                 elemento_esd = item.get('Elemento ESD')
+                medicion_esd = item.get('Medición')
 
                 # Obtener los IDs
                 usuario_id, esd_item_id = obtener_ids(usuario_nombre, elemento_esd)
 
+                # Pasar todos los contenidos del diccionario a la función pdf_proceso1
                 print(f"Procesando: {item}")
-                print(f"ID del usuario: {usuario_id}, ID del elemento ESD: {esd_item_id}")
+                print(
+                    f"ID del usuario: {usuario_id}, ID del elemento ESD: {esd_item_id}, valor de medicion: {medicion_esd}")
+
+                # Llamar a la función pdf_proceso1 con los valores del diccionario
+                pdf_proceso1(usuario_id=usuario_id, esd_item_id=esd_item_id, medicion_esd=medicion_esd,
+                             n_serie=item.get('N. Serie'), usuario=item.get('Usuario'),
+                             elemento_esd=item.get('Elemento ESD'), area=item.get('Área'),
+                             linea=item.get('Línea'),
+                             comentarios=item.get('Comentarios'), color_led=item.get('Color LED'))
 
                 # Incrementar el contador
                 contador += 1
@@ -49,6 +62,6 @@ def proceso1_procesar_datos(datos, registros_count):
         # Crear una ventana de alerta
         root = tk.Tk()
         root.withdraw()  # Ocultar la ventana principal
-        messagebox.showwarning("Alerta", "La cantidad de datos procesados no coincide con la cantidad de registros recibidos.")
+        messagebox.showwarning("Alerta",
+                               "La cantidad de datos procesados no coincide con la cantidad de registros recibidos.")
         root.destroy()
-
