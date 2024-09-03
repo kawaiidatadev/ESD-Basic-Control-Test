@@ -247,8 +247,8 @@ def iniciar_p1(ventana_procedimiento_actividad, global_estatus_titulo):
                     # print(f"Error al obtener datos para la fila {i}: {e}")
                     continue
 
-            from actividades_todo.proceso1_db import proceso1_procesar_datos
-            proceso1_procesar_datos(datos, registros_count)
+
+            proceso1_procesar_datos(datos, registros_count, proceso_1, ventana_procedimiento_actividad)
 
         # Crear el botón de guardar
         btn_guardar = tk.Button(proceso_1, text="Guardar", command=obtener_datos,

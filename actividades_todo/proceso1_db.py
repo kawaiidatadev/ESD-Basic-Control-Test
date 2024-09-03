@@ -19,39 +19,39 @@ def obtener_ids(usuario_nombre, elemento_esd):
     return result if result else (None, None)
 
 
-def proceso1_procesar_datos(datos, registros_count):
+def proceso1_procesar_datos(datos, registros_count, proceso_1, ventana_procedimiento_actividad):
     # Verificar si el dato es un mensaje de error
     if isinstance(datos, str) and datos.startswith('Error'):
         return  # Ignorar mensajes de error
 
-    # Inicializar el contador
+    # Inicializar el contador y la lista de registros procesados
     contador = 0
+    registros = []
 
-    # Si es una lista de diccionarios, filtramos los datos
+    # Verificar que 'datos' sea una lista de diccionarios
     if isinstance(datos, list):
         for item in datos:
+            # Solo contar si 'item' es un diccionario y tiene los campos requeridos
             if isinstance(item, dict) and item.get('Medición') != 'Seleccione':
+                contador += 1
                 usuario_nombre = item.get('Usuario')
                 elemento_esd = item.get('Elemento ESD')
-                medicion_esd = item.get('Medición')
 
                 # Obtener los IDs
                 usuario_id, esd_item_id = obtener_ids(usuario_nombre, elemento_esd)
 
-                # Pasar todos los contenidos del diccionario a la función pdf_proceso1
-                print(f"Procesando: {item}")
-                print(
-                    f"ID del usuario: {usuario_id}, ID del elemento ESD: {esd_item_id}, valor de medicion: {medicion_esd}")
+                # Añadir los IDs y demás datos al registro
+                item.update({
+                    'usuario_id': usuario_id,
+                    'esd_item_id': esd_item_id
+                })
 
-                # Llamar a la función pdf_proceso1 con los valores del diccionario
-                pdf_proceso1(usuario_id=usuario_id, esd_item_id=esd_item_id, medicion_esd=medicion_esd,
-                             n_serie=item.get('N. Serie'), usuario=item.get('Usuario'),
-                             elemento_esd=item.get('Elemento ESD'), area=item.get('Área'),
-                             linea=item.get('Línea'),
-                             comentarios=item.get('Comentarios'), color_led=item.get('Color LED'))
-
-                # Incrementar el contador
-                contador += 1
+                # Agregar el registro a la lista de registros
+                registros.append(item)
+            else:
+                print(f"Elemento no válido encontrado: {item}")
+    else:
+        print("Error: 'datos' no es una lista de diccionarios.")
 
     # Imprimir la cantidad de datos procesados
     print(f"Cantidad de datos procesados: {contador}")
@@ -62,6 +62,9 @@ def proceso1_procesar_datos(datos, registros_count):
         # Crear una ventana de alerta
         root = tk.Tk()
         root.withdraw()  # Ocultar la ventana principal
-        messagebox.showwarning("Alerta",
-                               "La cantidad de datos procesados no coincide con la cantidad de registros recibidos.")
+        messagebox.showwarning("Alerta", "La cantidad de datos procesados no coincide con la cantidad de registros recibidos.")
         root.destroy()
+    else:
+        # Llamar a la función pdf_proceso1 con la lista completa de registros
+        pdf_proceso1(registros, proceso_1, ventana_procedimiento_actividad)
+

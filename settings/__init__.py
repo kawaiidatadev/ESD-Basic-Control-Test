@@ -18,6 +18,10 @@ inon_path = r'\\mercury\Mtto_Prod\00_Departamento_Mantenimiento\ESD\Software\Rec
 # Default document PDF "ANSI S20.20" default
 document_path = r'\\10.0.0.9\Mtto_Prod\00_Departamento_Mantenimiento\ESD\Documentos\Manuales\97_ELE_0_ANSI-ESD-S20.20-2014.pdf'
 
+# ruta reportes de batas esd semestral
+ruta_base_pdf_esd = r'\\mercury\Mtto_Prod\00_Departamento_Mantenimiento\ESD\Software\Data\Reportes\Batas ESD'
+
+
 imagen_fondo_registro_batas = r'\\mercury\Mtto_Prod\00_Departamento_Mantenimiento\ESD\Software\Recurses\registro_batas.png'
 
 menu_azusa = r'\\mercury\Mtto_Prod\00_Departamento_Mantenimiento\ESD\Software\Recurses\azusa.png'
