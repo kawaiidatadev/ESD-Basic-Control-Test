@@ -47,10 +47,15 @@ for text, command in buttons:
 # Función para salir del programa
 def salir_programa():
     # Cerrar la conexión a la base de datos si está abierta
-    if 'connection' in globals():
+    if 'connection' in globals() and connection:
         connection.close()  # Cierra la conexión a la base de datos
-    root.quit()  # Cierra todas las ventanas de Tkinter
-    root.destroy()  # Destruye el objeto root
+
+    # Cerrar todas las ventanas de Tkinter
+    if 'root' in globals() and isinstance(root, tk.Tk):
+        root.quit()  # Cierra todas las ventanas de Tkinter
+        root.destroy()  # Destruye el objeto root
+
+    # Salir del programa de manera segura
     sys.exit(0)  # Sale del programa de manera segura
 
 # Crear el botón "Salir"

@@ -1,10 +1,52 @@
-from common.__init__ import *
+import os
+import shutil
+import openpyxl
+import locale
+import win32com.client as win32
+from datetime import datetime
+import subprocess
+import time
+
 # Ruta de la plantilla y la ruta de destino
 ruta_plantilla = r"\\mercury\Mtto_Prod\00_Departamento_Mantenimiento\ESD\Software\Recurses\plantilla_responsiva\responsiba.xlsx"
 ruta_destino_base = r"\\mercury\Mtto_Prod\00_Departamento_Mantenimiento\ESD\Software\Data\Resposivas generadas"
+ruta_bat = r"\\mercury\Mtto_Prod\00_Departamento_Mantenimiento\ESD\Software\Recurses\excel_error\ejecutable.bat"
 
 # Asegúrate de que la configuración regional esté en español (MX)
 locale.setlocale(locale.LC_TIME, 'es_MX.UTF-8')
+
+
+def abrir_excel(archivo_destino):
+    """Intenta abrir el archivo de Excel hasta tres veces. Si falla, ejecuta el .bat y lo intenta una vez más."""
+    intentos = 0
+    while intentos < 3:
+        try:
+            excel = win32.gencache.EnsureDispatch('Excel.Application')
+            excel.Visible = True
+            wb = excel.Workbooks.Open(archivo_destino)
+            excel.WindowState = win32.constants.xlMaximized
+            return True  # Se abrió correctamente
+        except Exception as e:
+            print(f"Error al intentar abrir Excel: {e}")
+            intentos += 1
+            time.sleep(1)  # Esperar un segundo antes de volver a intentar
+            print(f"Intento {intentos} fallido.")
+
+    # Si después de 3 intentos no se puede abrir, ejecuta el .bat y lo intenta una vez más
+    print("Ejecutando el archivo .bat para intentar resolver el error...")
+    subprocess.run([ruta_bat], shell=True)
+
+    # Intentar nuevamente abrir Excel
+    try:
+        excel = win32.gencache.EnsureDispatch('Excel.Application')
+        excel.Visible = True
+        wb = excel.Workbooks.Open(archivo_destino)
+        excel.WindowState = win32.constants.xlMaximized
+        return True  # Se abrió correctamente después de ejecutar el .bat
+    except Exception as e:
+        print(f"Error tras ejecutar el .bat: {e}")
+        return False  # No se pudo abrir incluso después del .bat
+
 
 def generar_responsiba(usuario_id, nombre_usuario, area, linea, tipo_elemento, numero_serie, tamaño):
     print(f"ID del Usuario: {usuario_id}")
@@ -14,8 +56,6 @@ def generar_responsiba(usuario_id, nombre_usuario, area, linea, tipo_elemento, n
     print(f"Tipo de Elemento Asignado: {tipo_elemento}")
     print(f"Número de Serie: {numero_serie}")
     print(f"Tamaño: {tamaño}")
-
-
 
     # Obtener la fecha y hora actual en formato español
     fecha_actual = datetime.now()
@@ -66,10 +106,15 @@ def generar_responsiba(usuario_id, nombre_usuario, area, linea, tipo_elemento, n
         ws_datadb.cell(row=1, column=col_num, value=header)
         ws_datadb.cell(row=2, column=col_num, value=value)
 
-
     # Guardar el archivo copiado
     wb.save(archivo_destino)
     print(f"Responsiva guardada como {archivo_destino}")
+
+    # Intentar abrir el archivo Excel
+    if not abrir_excel(archivo_destino):
+        print(
+            "No se pudo abrir el archivo Excel después de 3 intentos y de ejecutar el archivo .bat. Operación cancelada.")
+        return  # Cancelar operación si no se pudo abrir el archivo Excel
 
     # Actualizar el número en la plantilla original
     wb_original = openpyxl.load_workbook(ruta_plantilla)
@@ -78,12 +123,3 @@ def generar_responsiba(usuario_id, nombre_usuario, area, linea, tipo_elemento, n
 
     wb_original.save(ruta_plantilla)
     print(f"Número en la plantilla original actualizado")
-
-    # Abrir el archivo automáticamente y maximizado usando pywin32
-    if os.name == 'nt':  # Para Windows
-        excel = win32.gencache.EnsureDispatch('Excel.Application')
-        excel.Visible = True
-        wb = excel.Workbooks.Open(archivo_destino)
-        excel.WindowState = win32.constants.xlMaximized
-    else:
-        print("Este método solo está disponible para Windows")
