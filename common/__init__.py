@@ -18,3 +18,6 @@ import getpass
 from tkcalendar import DateEntry
 from dateutil.relativedelta import relativedelta
 import tkinter.font as tkfont
+import pandas as pd
+import pyautogui
+import tempfile
