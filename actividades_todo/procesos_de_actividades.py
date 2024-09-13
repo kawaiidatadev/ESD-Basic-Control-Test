@@ -2,8 +2,10 @@ from common.__init__ import *
 from settings.conf_ventana import configurar_ventana
 from settings.__init__ import db_path
 from actividades_todo.iniciar_proceso_1 import iniciar_p1
+from actividades_todo.instructivo1 import abrir_pdf
 from actividades_todo.formulario_proceso1 import iniciar_formulario_con_reintentos
 # Variable global para el estatus del título
+
 global_estatus_titulo = None
 
 def cumplimiento_4_2_1(sub_ventana_cumplimiento, actividad_id):
@@ -57,7 +59,17 @@ def cumplimiento_4_2_1(sub_ventana_cumplimiento, actividad_id):
 
     # Función para el botón de proceso
     def abrir_proceso():
-        print(f"Proceso - Estatus Título: {global_estatus_titulo}")
+        if global_estatus_titulo == 1:
+            abrir_pdf()
+        elif global_estatus_titulo == 2:
+            print('proceso 2')
+        elif global_estatus_titulo == 3:
+            print('proceso 3')
+        elif global_estatus_titulo == 4:
+            print('proceso 4')
+        else:
+            print('Global estatus erroneo')
+
 
     # Función para el botón de iniciar proceso
     def iniciar_proceso():
