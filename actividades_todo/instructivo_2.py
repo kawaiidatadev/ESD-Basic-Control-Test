@@ -27,5 +27,4 @@ def abrir_pdf2(pdf_path=pdf_instructivo2, max_attempts=3):
     if not try_open_pdf("default"):
         # Si falla, intentar con Chrome
         if not try_open_pdf("chrome"):
-            # Si todo falla, mostrar un mensaje de error
             msgbox("No se pudo abrir el PDF después de varios intentos.", "Error al abrir PDF")
