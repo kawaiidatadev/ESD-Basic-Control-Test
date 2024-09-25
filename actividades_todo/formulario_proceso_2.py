@@ -1,73 +1,43 @@
+import os
+import shutil
+import subprocess
+import tempfile
+import time
+from datetime import datetime
+from tkinter import simpledialog, messagebox
+from tkinter import Tk
+import openpyxl
+import getpass
 from common.__init__ import *
 from settings.conf_ventana import configurar_ventana
-from settings.__init__ import db_path
-from actividades_todo.iniciar_proceso_1 import iniciar_p1
-import getpass
 
 # Rutas de archivos
-plantilla_form1 = r'\\mercury\Mtto_Prod\00_Departamento_Mantenimiento\ESD\Software\Recurses\plantilla_proceso1\form_1.xlsm'
-ubicacion_copias = r'\\mercury\Mtto_Prod\00_Departamento_Mantenimiento\ESD\Software\Data\Formularios generados\proces1_form1'
-# Ruta del archivo .bat original
-ruta_original_bat =  r'\\mercury\Mtto_Prod\00_Departamento_Mantenimiento\ESD\Software\Recurses\excel_error\ejecutable.bat'
+plantilla_form2 = r'\\mercury\Mtto_Prod\00_Departamento_Mantenimiento\ESD\Software\Recurses\plantilla_proceso2\form_2.xlsx'
+ubicacion_copias = r'\\mercury\Mtto_Prod\00_Departamento_Mantenimiento\ESD\Software\Data\Formularios generados\proces2_form2'
+ruta_original_bat = r'\\mercury\Mtto_Prod\00_Departamento_Mantenimiento\ESD\Software\Recurses\excel_error\ejecutable.bat'
+
+import warnings
+
+warnings.filterwarnings("ignore", category=UserWarning, module="openpyxl")
 
 
-def obtener_datos_usuarios_elementos():
-    try:
-        conn = sqlite3.connect(db_path)
-        query = '''
-        SELECT pe.id AS Id, 
-               ei.tipo_elemento AS Elemento, 
-               ei.numero_serie AS Numero_de_serie, 
-               ei.tamaño AS Tamaño,
-               pe.nombre_usuario AS nombre_usuario, 
-               pe.rol, 
-               pe.area, 
-               pe.linea, 
-               pe.puesto
-        FROM usuarios_elementos ue
-        INNER JOIN personal_esd pe ON ue.usuario_id = pe.id
-        INNER JOIN esd_items ei ON ue.esd_item_id = ei.id
-        WHERE ei.tipo_elemento IN ('Bata ESD', 'Bata Polar ESD');
-        '''
-        df = pd.read_sql_query(query, conn)
-        conn.close()
-        return df
-    except Exception as e:
-        print(f"Error al obtener datos de la base de datos: {e}")
-        messagebox.showerror("Error", f"No se pudo obtener datos de la base de datos: {e}")
-        return None
 
-def llenar_excel_con_datos(ruta_excel, datos):
-    try:
-        excel = win32.Dispatch('Excel.Application')
-        excel.Visible = False
-        wb = excel.Workbooks.Open(ruta_excel)
-        hoja = wb.Sheets(1)
+def obtener_numero_de_registros():
+    """Abre una ventana para ingresar un número entero entre 1 y 100."""
 
-        fila_inicial = 17
+    while True:
+        try:
+            entrada = simpledialog.askinteger("Registros", "Ingresa la cantidad de mesas ESD:             ",
+                                              minvalue=1, maxvalue=100)
+            if entrada is not None:
+                return entrada  # Devuelve el número ingresado
+            else:
+                messagebox.showinfo("Información", "Operación cancelada.")  # Mensaje si se cancela
+                return None  # Devuelve None si se cancela
+        except Exception as e:
+            messagebox.showerror("Error", f"Error al ingresar el número: {e}")
+            break
 
-        encabezados = ['Id', 'Elemento', 'Numero de serie', 'Tamaño', 'nombre_usuario', 'rol', 'area', 'linea', 'puesto',
-                       'Medicion', 'Criterio De Conformidad', 'Estado Final', 'Resguardo/Ubicación', 'Comentarios']
-
-        for col_num, encabezado in enumerate(encabezados, start=2):  # Inicia desde columna B
-            hoja.Cells(fila_inicial, col_num).Value = encabezado
-
-        for idx, fila in datos.iterrows():
-            for col_idx, valor in enumerate(fila, start=2):
-                hoja.Cells(fila_inicial + idx + 1, col_idx).Value = valor
-
-        ultima_fila = fila_inicial + len(datos)
-        rango = f'B2:O{ultima_fila}'
-        hoja.Range(rango).Select()
-        hoja.PageSetup.PrintArea = rango
-        excel.Windows(wb.Name).Activate()
-        wb.Save()
-        wb.Close()
-        excel.Quit()
-
-    except Exception as e:
-        print(f"Error al llenar el archivo Excel: {e}")
-        messagebox.showerror("Error", f"No se pudo llenar el archivo Excel: {e}")
 
 import threading
 
@@ -144,21 +114,77 @@ def ejecutar_y_eliminar_bat(ruta_original_bat):
         else:
             print("El archivo batch temporal no existe o ya fue eliminado.")
 
-def iniciar_formulario_con_reintentos(max_intentos=3):
+
+
+from openpyxl.utils import column_index_from_string
+
+def llenar_excel_con_datos(ruta_archivo, numero_de_registros):
+    """Llena la tabla 'Tabla2' en la columna 'Numero De Serie' con el número de registros."""
+
+    wb = openpyxl.load_workbook(ruta_archivo)
+    sheet = wb.active
+
+    # Buscar la tabla "Tabla2"
+    tabla_encontrada = None
+    for table in sheet.tables.values():
+        if table.name == "Tabla2":
+            tabla_encontrada = table
+            break
+
+    if tabla_encontrada is None:
+        messagebox.showerror("Error", "No se encontró la tabla 'Tabla2'.")
+        return
+
+    # Identificar las celdas que pertenecen a la columna "Numero De Serie"
+    inicio_fila, fin_fila = int(tabla_encontrada.ref.split(":")[0][1:]), int(tabla_encontrada.ref.split(":")[1][1:])
+    inicio_columna = column_index_from_string(tabla_encontrada.ref.split(":")[0][:1])
+
+    # Buscar la columna "Numero De Serie"
+    cabeceras = sheet[inicio_fila]
+    indice_columna_serie = None
+    for idx, celda in enumerate(cabeceras, start=1):
+        if celda.value == "Numero De Serie":
+            indice_columna_serie = idx
+            break
+
+    if indice_columna_serie is None:
+        messagebox.showerror("Error", "No se encontró la columna 'Numero De Serie' en la tabla 'Tabla2'.")
+        return
+
+    # Llenar los registros en la columna "Numero De Serie"
+    for i in range(numero_de_registros):
+        celda = sheet.cell(row=inicio_fila + 1 + i, column=indice_columna_serie)
+        celda.value = i + 1  # Número de registro
+
+    # Actualizar el rango de la tabla para incluir las nuevas filas
+    ultima_fila = inicio_fila + numero_de_registros
+    nueva_referencia = f"{tabla_encontrada.ref.split(':')[0]}:{tabla_encontrada.ref.split(':')[1][:1]}{ultima_fila}"
+    tabla_encontrada.ref = nueva_referencia
+
+    # Establecer área de impresión (desde B2 hasta donde esté el último registro)
+    sheet.print_area = f'B2:E{ultima_fila}'
+
+    wb.save(ruta_archivo)  # Guarda los cambios
+    wb.close()  # Cierra el archivo
+
+
+
+def iniciar_formulario_con_reintentos_f2(max_intentos=3):
+    """Inicia el formulario y gestiona los reintentos en caso de error."""
     intentos = 0
     while intentos < max_intentos:
         try:
-            datos = obtener_datos_usuarios_elementos()
+            datos = obtener_numero_de_registros()
             if datos is None:
                 return
 
             fecha_hora_actual = datetime.now().strftime("%d-%B-%Y %H-%M-%S")
-            nuevo_nombre = f"{fecha_hora_actual} Proceso 1 - Form 1.xlsm"
+            nuevo_nombre = f"{fecha_hora_actual} Proceso 2 - Form 2.xlsx"
             nueva_ruta = os.path.join(ubicacion_copias, nuevo_nombre)
 
-            shutil.copy(plantilla_form1, nueva_ruta)
+            shutil.copy(plantilla_form2, nueva_ruta)
             llenar_excel_con_datos(nueva_ruta, datos)
-            os.startfile(nueva_ruta)
+            os.startfile(nueva_ruta)  # Abre el archivo en Excel
             break
 
         except Exception as e:
@@ -171,7 +197,7 @@ def iniciar_formulario_con_reintentos(max_intentos=3):
                 print(f"Error al ejecutar el archivo batch: {e}")
                 messagebox.showerror("Error", f"No se pudo ejecutar el archivo batch: {e}")
 
-            time.sleep(10)
+            time.sleep(10)  # Espera antes de reintentar
             intentos += 1
 
     if intentos == max_intentos:
