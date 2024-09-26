@@ -1,8 +1,8 @@
 from common.__init__ import *
 from settings.conf_ventana import configurar_ventana
 from settings.__init__ import db_path
-
-
+from actividades_todo.estatus_proceso3 import manejo_de_estatus3_terminda
+from actividades_todo.crear_pdf_proceso3 import pdf_proceso3
 # Función para limpiar y procesar los registros
 def limpiar_y_procesar_registro(registro):
     # Verificar los campos obligatorios
@@ -48,8 +48,8 @@ def db_proceso_3_registro(registros):
         # Guardar los cambios en la base de datos
         conn.commit()
         print("Registros insertados correctamente.")
-        #manejo_de_estatus3_terminda()
-        #pdf_proceso3(registros)
+        manejo_de_estatus3_terminda()
+        pdf_proceso3(registros)
 
     except Exception as e:
         print(f"Error al insertar registros: {e}")
