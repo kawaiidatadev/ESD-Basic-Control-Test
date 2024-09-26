@@ -98,7 +98,6 @@ def iniciar_p2(ventana_procedimiento_actividad, global_estatus_titulo):
             comentarios.pack(pady=5)
 
             # Función para guardar el registro
-            # Función para guardar el registro
             def guardar_registro():
                 valor = medicion.get()
                 comentario_texto = comentarios.get("1.0", tk.END).strip()
@@ -152,9 +151,13 @@ def iniciar_p2(ventana_procedimiento_actividad, global_estatus_titulo):
 
         # Función para confirmar los registros
         def confirmar_registros():
+            # Verificar si hay registros en la lista
+            if not registros:
+                messagebox.showwarning("Sin registros", "No hay registros para confirmar.")
+                return  # Salir de la función si no hay registros
+
             respuesta = messagebox.askyesno("Confirmar registros", "¿Deseas confirmar y guardar todos los registros?")
             if respuesta:
-                print(f"registros\n")
                 db_proceso_2_registro(registros)  # Llamar a la función con los registros
                 messagebox.showinfo("Éxito", "Todos los registros han sido guardados correctamente.")
                 proceso_2.withdraw()

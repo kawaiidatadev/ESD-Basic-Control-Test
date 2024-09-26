@@ -8,13 +8,15 @@ from reportlab.lib import colors  # Importar colors para poder usar colores en l
 from conversion_megaohms import convertir_a_megaohms
 from settings.__init__ import proceso_2_pdf
 from common.__init__ import *
-
+import time
 # Zona horaria de Guadalajara, Jalisco, México
 import pytz
 tz = pytz.timezone('America/Mexico_City')
 
 def pdf_proceso2(registros):
     try:
+        print(f'Registros llegados en pdf2: {registros}, registros')
+        time.sleep(1)
         # Lista para almacenar los registros con la conversión a Megaohms
         registros_con_megohms = []
 
@@ -122,8 +124,12 @@ def pdf_proceso2(registros):
 
 from fpdf import FPDF
 
+import shutil  # Importar shutil para copiar archivos
+
 def generar_grafico(registros, ruta_pdf_esd, pdf_filename):
     try:
+        print(registros)
+        time.sleep(1)
         # Filtrar los registros con color_led 'red'
         registros_red = [r for r in registros if r['color_led'] == 'red']
 
@@ -185,8 +191,13 @@ def generar_grafico(registros, ruta_pdf_esd, pdf_filename):
         grafico_filepath = os.path.join(ruta_pdf_esd, pdf_filename)
         pdf.output(grafico_filepath)
 
-        # Abrir el PDF directamente
-        subprocess.Popen([grafico_filepath], shell=True)
+        # Crear una copia temporal del archivo PDF en el directorio temporal de Windows
+        temp_dir = os.getenv('TEMP')
+        temp_grafico_filepath = os.path.join(temp_dir, f"Temp_{pdf_filename}")
+        shutil.copy(grafico_filepath, temp_grafico_filepath)
+
+        # Abrir el archivo PDF temporalmente
+        subprocess.Popen([temp_grafico_filepath], shell=True)
 
         print(f"PDF generado con éxito: {grafico_filepath}")
 
