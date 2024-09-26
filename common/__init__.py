@@ -21,3 +21,4 @@ import tkinter.font as tkfont
 import pandas as pd
 import pyautogui
 import tempfile
+import ctypes

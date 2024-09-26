@@ -3,15 +3,15 @@ import fnmatch
 
 # Ruta al directorio donde se buscarán los archivos PDF
 pdf_directory = r'\\mercury\Mtto_Prod\00_Departamento_Mantenimiento\ESD\Software\Recurses\Instructivos'
-
+av_code = '1180'
 # Función principal para encontrar y abrir un PDF con "1180" en el nombre
-def abrir_pdf2(max_attempts=3):
+def abrir_pdf3(max_attempts=3):
     # Función interna para mostrar un cuadro de mensaje
     def msgbox(message, title):
         ctypes.windll.user32.MessageBoxW(0, message, title, 1)
 
     # Buscar el primer archivo PDF que contenga "1180" en su nombre
-    def encontrar_pdf(contenido="1192"):
+    def encontrar_pdf(contenido=av_code):
         for root, dirs, files in os.walk(pdf_directory):
             for filename in fnmatch.filter(files, f"*{contenido}*.pdf"):
                 return os.path.join(root, filename)
@@ -32,8 +32,8 @@ def abrir_pdf2(max_attempts=3):
                 time.sleep(2)  # Esperar 2 segundos antes de reintentar
         return False
 
-    # Buscar el archivo PDF que contenga "1192"
-    pdf_encontrado = encontrar_pdf("1192")
+    # Buscar el archivo PDF que contenga av_code
+    pdf_encontrado = encontrar_pdf(av_code)
 
     if pdf_encontrado:
         # Intentar abrir primero con el visor predeterminado
@@ -43,4 +43,4 @@ def abrir_pdf2(max_attempts=3):
                 msgbox(f"No se pudo abrir el PDF '{pdf_encontrado}' después de varios intentos.", "Error al abrir PDF")
     else:
         # Mostrar un mensaje si no se encuentra el PDF
-        msgbox("No se encontró ningún PDF que contenga '1180' en su nombre.", "PDF no encontrado")
+        msgbox(f"No se encontró ningún PDF que contenga {av_code} en su nombre.", "PDF no encontrado")
