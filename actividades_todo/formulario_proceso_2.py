@@ -162,7 +162,7 @@ def llenar_excel_con_datos(ruta_archivo, numero_de_registros):
     tabla_encontrada.ref = nueva_referencia
 
     # Establecer área de impresión (desde B2 hasta donde esté el último registro)
-    sheet.print_area = f'B2:E{ultima_fila}'
+    sheet.print_area = f'B2:F{ultima_fila}'
 
     wb.save(ruta_archivo)  # Guarda los cambios
     wb.close()  # Cierra el archivo
@@ -203,5 +203,3 @@ def iniciar_formulario_con_reintentos_f2(max_intentos=3):
     if intentos == max_intentos:
         print("Se alcanzó el número máximo de intentos.")
         messagebox.showerror("Error", "Se alcanzó el número máximo de intentos.")
-
-
