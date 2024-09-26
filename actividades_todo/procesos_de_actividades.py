@@ -3,6 +3,7 @@ from settings.conf_ventana import configurar_ventana
 from settings.__init__ import db_path
 from actividades_todo.iniciar_proceso_1 import iniciar_p1
 from actividades_todo.iniciar_proceso_2 import iniciar_p2
+from actividades_todo.iniciar_proceso_3 import iniciar_p3
 from actividades_todo.instructivo1 import abrir_pdf
 from actividades_todo.formulario_proceso1 import iniciar_formulario_con_reintentos
 from actividades_todo.formulario_proceso_2 import iniciar_formulario_con_reintentos_f2
@@ -85,6 +86,8 @@ def cumplimiento_4_2_1(sub_ventana_cumplimiento, actividad_id):
             iniciar_p1(ventana_procedimiento_actividad, global_estatus_titulo)
         elif global_estatus_titulo == 2:
             iniciar_p2(ventana_procedimiento_actividad, global_estatus_titulo)
+        elif global_estatus_titulo == 3:
+            iniciar_p3(ventana_procedimiento_actividad, global_estatus_titulo)
 
     # Crear botones y asignarles las funciones correspondientes
     btn_formulario = tk.Button(ventana_procedimiento_actividad, text="Formulario", command=abrir_formulario,
