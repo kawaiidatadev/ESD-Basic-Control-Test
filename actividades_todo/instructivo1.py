@@ -40,7 +40,6 @@ def abrir_pdf(max_attempts=3):
         if not try_open_pdf(pdf_encontrado, "default"):
             # Si falla, intentar con Chrome
             if not try_open_pdf(pdf_encontrado, "chrome"):
-                # Si todo falla, mostrar un mensaje de error
                 msgbox(f"No se pudo abrir el PDF '{pdf_encontrado}' después de varios intentos.", "Error al abrir PDF")
     else:
         # Mostrar un mensaje si no se encuentra el PDF
