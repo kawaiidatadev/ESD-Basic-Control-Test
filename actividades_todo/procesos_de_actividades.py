@@ -7,6 +7,8 @@ from actividades_todo.iniciar_proceso_3 import iniciar_p3
 from actividades_todo.instructivo1 import abrir_pdf
 from actividades_todo.formulario_proceso1 import iniciar_formulario_con_reintentos
 from actividades_todo.formulario_proceso_2 import iniciar_formulario_con_reintentos_f2
+from actividades_todo.formulario_proceso_3 import iniciar_formulario_con_reintentos_f3
+
 from actividades_todo.instructivo_2 import abrir_pdf2
 # Variable global para el estatus del título
 
