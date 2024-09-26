@@ -53,6 +53,10 @@ imagen2_eliminar_actividad1 = r'\\mercury\Mtto_Prod\00_Departamento_Mantenimient
 proceso_2_pdf = r'\\mercury\Mtto_Prod\00_Departamento_Mantenimiento\ESD\Software\Data\Reportes\Tapetes ESD'
 
 proceso_3_pdf = r'\\mercury\Mtto_Prod\00_Departamento_Mantenimiento\ESD\Software\Data\Reportes\Carritos ESD'
+
+proceso_4_pdf = r'\\mercury\Mtto_Prod\00_Departamento_Mantenimiento\ESD\Software\Data\Reportes\Puntos ESD'
+
+
 def poner_imagen_de_fondo(ventana, path_imagen, ancho=None, alto=None, x=0, y=0, resize=True):
     # Cargar la imagen de fondo
     imagen_fondo = Image.open(path_imagen)
