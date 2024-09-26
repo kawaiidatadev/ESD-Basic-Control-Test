@@ -5,11 +5,13 @@ from actividades_todo.iniciar_proceso_1 import iniciar_p1
 from actividades_todo.iniciar_proceso_2 import iniciar_p2
 from actividades_todo.iniciar_proceso_3 import iniciar_p3
 from actividades_todo.instructivo1 import abrir_pdf
+from actividades_todo.instructivo_2 import abrir_pdf2
+from actividades_todo.instructivo_3 import abrir_pdf3
 from actividades_todo.formulario_proceso1 import iniciar_formulario_con_reintentos
 from actividades_todo.formulario_proceso_2 import iniciar_formulario_con_reintentos_f2
 from actividades_todo.formulario_proceso_3 import iniciar_formulario_con_reintentos_f3
 
-from actividades_todo.instructivo_2 import abrir_pdf2
+
 # Variable global para el estatus del título
 
 global_estatus_titulo = None
@@ -76,6 +78,7 @@ def cumplimiento_4_2_1(sub_ventana_cumplimiento, actividad_id):
             abrir_pdf2()
         elif global_estatus_titulo == 3:
             print('proceso 3')
+            abrir_pdf3()
         elif global_estatus_titulo == 4:
             print('proceso 4')
         else:
