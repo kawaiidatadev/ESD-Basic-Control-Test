@@ -8,6 +8,7 @@ from actividades_todo.iniciar_proceso_4 import iniciar_p4
 from actividades_todo.instructivo1 import abrir_pdf
 from actividades_todo.instructivo_2 import abrir_pdf2
 from actividades_todo.instructivo_3 import abrir_pdf3
+from actividades_todo.instructivo_4 import abrir_pdf4
 from actividades_todo.formulario_proceso1 import iniciar_formulario_con_reintentos
 from actividades_todo.formulario_proceso_2 import iniciar_formulario_con_reintentos_f2
 from actividades_todo.formulario_proceso_3 import iniciar_formulario_con_reintentos_f3
@@ -82,6 +83,7 @@ def cumplimiento_4_2_1(sub_ventana_cumplimiento, actividad_id):
             abrir_pdf3()
         elif global_estatus_titulo == 4:
             print('proceso 4')
+            abrir_pdf4()
         else:
             print('Global estatus erroneo')
 
@@ -97,6 +99,8 @@ def cumplimiento_4_2_1(sub_ventana_cumplimiento, actividad_id):
             iniciar_p3(ventana_procedimiento_actividad, global_estatus_titulo)
         elif global_estatus_titulo == 4:
             iniciar_p4(ventana_procedimiento_actividad, global_estatus_titulo)
+        else:
+            print('Global estatus erroneo')
 
     # Crear botones y asignarles las funciones correspondientes
     btn_formulario = tk.Button(ventana_procedimiento_actividad, text="Formulario", command=abrir_formulario,
