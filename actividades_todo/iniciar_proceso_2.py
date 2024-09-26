@@ -5,8 +5,7 @@ from actividades_todo.estatus_proceso2 import manejo_de_estatus2
 from conversion_megaohms import convertir_a_megaohms
 from actividades_todo.db_write_registros_proceso_2 import db_proceso_2_registro
 
-# Lista para almacenar los registros realizados
-registros = []
+
 # Zona horaria de Guadalajara, Jalisco, México
 tz = pytz.timezone('America/Mexico_City')
 
@@ -77,7 +76,10 @@ def iniciar_p2(ventana_procedimiento_actividad, global_estatus_titulo):
 
         canvas.bind_all("<MouseWheel>", _on_mouse_wheel)
 
-        # Función para agregar un nuevo registro
+        # Inicializar lista de registros si no existe aún
+        if 'registros' not in globals():
+            registros = []  # Asegurarse de inicializar una vez
+
         def nuevo_registro():
             top_nuevo = tk.Toplevel(proceso_2)
             configurar_ventana(top_nuevo, "Nuevo registro de medición", "500x400")
@@ -89,7 +91,8 @@ def iniciar_p2(ventana_procedimiento_actividad, global_estatus_titulo):
             tk.Label(top_nuevo, text="Selecciona la medición:", font=("Arial", 12)).pack()
             medicion = tk.StringVar()
             medicion.set("10E3")  # Valor por defecto
-            opciones_medicion = ["10E3", "10E4", "10E5", "10E6", "10E7", "10E8", "10E9", "10E10", "10E11", "10E12", "10E13"]
+            opciones_medicion = ["10E3", "10E4", "10E5", "10E6", "10E7", "10E8", "10E9", "10E10", "10E11", "10E12",
+                                 "10E13"]
             tk.OptionMenu(top_nuevo, medicion, *opciones_medicion).pack(pady=5)
 
             # Campo de comentarios
@@ -99,6 +102,11 @@ def iniciar_p2(ventana_procedimiento_actividad, global_estatus_titulo):
 
             # Función para guardar el registro
             def guardar_registro():
+                # Evitar guardar si ya existe el registro
+                if registro_num <= len(registros):
+                    messagebox.showwarning("Advertencia", "El registro ya ha sido guardado.")
+                    return
+
                 valor = medicion.get()
                 comentario_texto = comentarios.get("1.0", tk.END).strip()
 
@@ -113,7 +121,7 @@ def iniciar_p2(ventana_procedimiento_actividad, global_estatus_titulo):
                 # Obtener la fecha y hora actual en Guadalajara, Jalisco, México
                 fecha_registro = datetime.now(tz).strftime('%Y-%m-%d %H:%M:%S')
 
-                # Guardar registro en la lista
+                # Guardar registro en la lista si no existe
                 registro = {
                     "numero_registro": registro_num,
                     "elemento_esd": "Tapete ESD",
@@ -136,7 +144,8 @@ def iniciar_p2(ventana_procedimiento_actividad, global_estatus_titulo):
                 top_nuevo.destroy()
 
             # Botón para guardar el registro
-            btn_guardar = tk.Button(top_nuevo, text="Guardar", command=guardar_registro, font=("Arial", 12, "bold"), bg="blue", fg="white", height=1, width=10)
+            btn_guardar = tk.Button(top_nuevo, text="Guardar", command=guardar_registro, font=("Arial", 12, "bold"),
+                                    bg="blue", fg="white", height=1, width=10)
             btn_guardar.pack(pady=10)
 
             # Mover el cursor al botón "Guardar"
