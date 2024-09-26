@@ -1,15 +1,24 @@
 from common.__init__ import *
-# Ruta al archivo PDF
-pdf_instructivo2 = r''
+import fnmatch
 
-# Función principal que intenta abrir el PDF
-def abrir_pdf2(pdf_path=pdf_instructivo2, max_attempts=3):
+# Ruta al directorio donde se buscarán los archivos PDF
+pdf_directory = r'\\mercury\Mtto_Prod\00_Departamento_Mantenimiento\ESD\Software\Recurses\Instructivos'
+
+# Función principal para encontrar y abrir un PDF con "1180" en el nombre
+def abrir_pdf2(max_attempts=3):
     # Función interna para mostrar un cuadro de mensaje
     def msgbox(message, title):
         ctypes.windll.user32.MessageBoxW(0, message, title, 1)
 
+    # Buscar el primer archivo PDF que contenga "1180" en su nombre
+    def encontrar_pdf(contenido="1180"):
+        for root, dirs, files in os.walk(pdf_directory):
+            for filename in fnmatch.filter(files, f"*{contenido}*.pdf"):
+                return os.path.join(root, filename)
+        return None
+
     # Función interna para intentar abrir el PDF con el visor predeterminado o Chrome
-    def try_open_pdf(method):
+    def try_open_pdf(pdf_path, method):
         attempt = 0
         while attempt < max_attempts:
             try:
@@ -23,8 +32,15 @@ def abrir_pdf2(pdf_path=pdf_instructivo2, max_attempts=3):
                 time.sleep(2)  # Esperar 2 segundos antes de reintentar
         return False
 
-    # Intentar abrir primero con el visor predeterminado
-    if not try_open_pdf("default"):
-        # Si falla, intentar con Chrome
-        if not try_open_pdf("chrome"):
-            msgbox("No se pudo abrir el PDF después de varios intentos.", "Error al abrir PDF")
+    # Buscar el archivo PDF que contenga "1192"
+    pdf_encontrado = encontrar_pdf("1192")
+
+    if pdf_encontrado:
+        # Intentar abrir primero con el visor predeterminado
+        if not try_open_pdf(pdf_encontrado, "default"):
+            # Si falla, intentar con Chrome
+            if not try_open_pdf(pdf_encontrado, "chrome"):
+                msgbox(f"No se pudo abrir el PDF '{pdf_encontrado}' después de varios intentos.", "Error al abrir PDF")
+    else:
+        # Mostrar un mensaje si no se encuentra el PDF
+        msgbox("No se encontró ningún PDF que contenga '1180' en su nombre.", "PDF no encontrado")
