@@ -56,6 +56,7 @@ def cumplimiento_4_2_1(sub_ventana_cumplimiento, actividad_id):
             print('formulario 2')
             iniciar_formulario_con_reintentos_f2()
         elif global_estatus_titulo == 3:
+            iniciar_formulario_con_reintentos_f3()
             print('formulario 3')
         elif global_estatus_titulo == 4:
             print('formulario 4')
