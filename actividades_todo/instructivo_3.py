@@ -3,7 +3,8 @@ import fnmatch
 
 # Ruta al directorio donde se buscarán los archivos PDF
 pdf_directory = r'\\mercury\Mtto_Prod\00_Departamento_Mantenimiento\ESD\Software\Recurses\Instructivos'
-av_code = '1180'
+av_code = '1193'
+
 # Función principal para encontrar y abrir un PDF con "1180" en el nombre
 def abrir_pdf3(max_attempts=3):
     # Función interna para mostrar un cuadro de mensaje
