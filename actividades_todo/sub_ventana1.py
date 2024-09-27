@@ -49,6 +49,7 @@ def ven1(root):
 
     # Botón de Actividades de Capacitación
     btn_capacitacion = tk.Button(main_frame, text="Actividades de capacitación",
+                                 command=lambda: cumplimiento_4_2(sub_ventana_act),
                                  bg="#17a2b8", fg="white", **button_style)
     btn_capacitacion.grid(row=1, column=0, padx=5, pady=5)
 
