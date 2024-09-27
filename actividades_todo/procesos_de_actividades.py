@@ -12,6 +12,7 @@ from actividades_todo.instructivo_4 import abrir_pdf4
 from actividades_todo.formulario_proceso1 import iniciar_formulario_con_reintentos
 from actividades_todo.formulario_proceso_2 import iniciar_formulario_con_reintentos_f2
 from actividades_todo.formulario_proceso_3 import iniciar_formulario_con_reintentos_f3
+from actividades_todo.formulario_proceso_4 import iniciar_formulario_con_reintentos_f4
 
 
 # Variable global para el estatus del título
@@ -65,6 +66,7 @@ def cumplimiento_4_2_1(sub_ventana_cumplimiento, actividad_id):
             iniciar_formulario_con_reintentos_f3()
             print('formulario 3')
         elif global_estatus_titulo == 4:
+            iniciar_formulario_con_reintentos_f4()
             print('formulario 4')
         else:
             print('Global estatus erroneo')
