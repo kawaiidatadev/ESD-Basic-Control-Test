@@ -56,6 +56,7 @@ proceso_3_pdf = r'\\mercury\Mtto_Prod\00_Departamento_Mantenimiento\ESD\Software
 
 proceso_4_pdf = r'\\mercury\Mtto_Prod\00_Departamento_Mantenimiento\ESD\Software\Data\Reportes\Puntos ESD'
 
+reporte_c_imagen = r'\\mercury\Mtto_Prod\00_Departamento_Mantenimiento\ESD\Software\Recurses\uma_1.jpg'
 
 def poner_imagen_de_fondo(ventana, path_imagen, ancho=None, alto=None, x=0, y=0, resize=True):
     # Cargar la imagen de fondo

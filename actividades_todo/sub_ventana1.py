@@ -47,22 +47,6 @@ def ven1(root):
                                  bg="#28a745", fg="white", **button_style)
     btn_cumplimiento.grid(row=0, column=1, padx=5, pady=5)
 
-    # Botón de Actividades de Capacitación
-    btn_capacitacion = tk.Button(main_frame, text="Actividades de capacitación",
-                                 command=lambda: cumplimiento_4_2(sub_ventana_act),
-                                 bg="#17a2b8", fg="white", **button_style)
-    btn_capacitacion.grid(row=1, column=0, padx=5, pady=5)
-
-    # Botón de Actividades No Cumplidas / Pospuestas
-    btn_no_cumplidas = tk.Button(main_frame, text="Actividades no cumplidas / pospuestas",
-                                 bg="#ffc107", fg="black", **button_style)
-    btn_no_cumplidas.grid(row=1, column=1, padx=5, pady=5)
-
-    # Botón de Reportes
-    btn_reportes = tk.Button(main_frame, text="Reportes",
-                             bg="#6c757d", fg="white", **button_style)
-    btn_reportes.grid(row=2, column=0, columnspan=2, padx=5, pady=5)  # Ocupa dos columnas
-
     # Crear un Frame inferior para el botón de salir
     bottom_frame = tk.Frame(sub_ventana_act, bg='')  # Sin bg transparente
     bottom_frame.pack(side="bottom", pady=10)
