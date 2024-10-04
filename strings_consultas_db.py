@@ -107,3 +107,25 @@ consulta_limpia_proceso_1 = '''
         JOIN esd_items ei ON ue.esd_item_id = ei.id
         WHERE pe.nombre_usuario = ? AND ei.tipo_elemento = ?
     '''
+
+
+# Consulta todos los usuarios y su elemento ESD
+consulta_elementos_usuarios = """
+    SELECT
+    esd_items.numero_serie, personal_esd.nombre_usuario, esd_items.tipo_elemento, personal_esd.area, personal_esd.linea, esd_items.comentarios
+    FROM
+    usuarios_elementos
+    JOIN
+    esd_items
+    ON
+    usuarios_elementos.esd_item_id = esd_items.id
+    JOIN
+    personal_esd
+    ON
+    usuarios_elementos.usuario_id = personal_esd.id
+    WHERE
+    LOWER(esd_items.tipo_elemento) != 1
+    ORDER
+    BY
+    personal_esd.nombre_usuario
+"""
