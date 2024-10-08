@@ -60,6 +60,9 @@ reporte_c_imagen = r'\\mercury\Mtto_Prod\00_Departamento_Mantenimiento\ESD\Softw
 
 reporte_c_path = r'\\mercury\Mtto_Prod\00_Departamento_Mantenimiento\ESD\Software\Data\Reportes\Reporte central'
 
+plantilla_central = r'\\mercury\Mtto_Prod\00_Departamento_Mantenimiento\ESD\Software\Data\Reportes\Reporte central\P1.xlsx'
+
+
 def poner_imagen_de_fondo(ventana, path_imagen, ancho=None, alto=None, x=0, y=0, resize=True):
     # Cargar la imagen de fondo
     imagen_fondo = Image.open(path_imagen)

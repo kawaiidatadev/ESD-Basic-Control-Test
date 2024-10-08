@@ -1,21 +1,17 @@
 from common.__init__ import *
 from reporte_grande.inicializacion import iniciar_reporte
-from settings.__init__ import db_path, reporte_c_path
-
+from settings.__init__ import db_path, reporte_c_path, plantilla_central
+from reporte_grande.limpieza import ejecutar_y_eliminar_bat, ruta_original_bat
 
 def reporte_grande():
     iniciar_reporte()
     print("Reporte Central ESD")
+    ejecutar_y_eliminar_bat(ruta_original_bat)
     generate_report()
 
 def generate_report():
-    import sqlite3
-    import pandas as pd
-    import os
-    from openpyxl import load_workbook
-    from openpyxl.worksheet.table import Table, TableStyleInfo
 
-    # Conectar a la base de datos SQLite
+ # Conectar a la base de datos SQLite
     conn = sqlite3.connect(db_path)
 
     # Obtener datos de las tablas y almacenarlos en DataFrames de pandas
@@ -33,52 +29,46 @@ def generate_report():
     # Cerrar la conexión a la base de datos
     conn.close()
 
-    # Obtener la fecha y hora actual y el nombre de usuario de Windows
-    now = datetime.now()
-    current_time = now.strftime("%d-%B-%Y %H-%M-%S")
-    user_name = getpass.getuser()
+    # Lista de DataFrames y sus nombres de tabla correspondientes
+    dataframes = [
+        (esd_items_df, 'ESD Items'),
+        (personal_esd_df, 'Personal ESD'),
+        (actividades_df, 'Actividades'),
+        (usuarios_elementos_df, 'Usuarios Elementos'),
+        (evidencias_asignacion_df, 'Evidencias Asignación'),
+        (registro_actividades_df, 'Registro Actividades'),
+        (actividades_registradas_df, 'Actividades Registradas'),
+        (elementos_usuarios_df, 'Usuarios Elementos Todos')
+    ]
 
-    # Crear el nombre del archivo con la fecha y el usuario
-    file_name = f'Informe_ESD_{current_time}_{user_name}.xlsx'
+    # Agregar una columna 'tabla_origen' en cada DataFrame
+    for df, nombre_tabla in dataframes:
+        df['tabla_origen'] = nombre_tabla
 
-    # Ruta completa para guardar el archivo
+    # Combinar todos los DataFrames en uno solo
+    df_unificado = pd.concat([df for df, _ in dataframes], ignore_index=True)
+
+    # Limpiar y formatear la columna 'fecha_maestra', si existe
+    if 'fecha_maestra' in df_unificado.columns:
+        df_unificado['fecha_maestra'] = pd.to_datetime(df_unificado['fecha_maestra'], errors='coerce').dt.strftime('%d-%m-%Y')
+
+    # Nombre del archivo fijo
+    file_name = 'db_datos_excel.xlsx'
+
+
+    reporte_c_path = r'\\mercury\Mtto_Prod\00_Departamento_Mantenimiento\ESD\Software\Recurses\excel_data'
+
+    # Ruta completa para guardar el archivo (sobreescribir si ya existe)
     save_path = os.path.join(reporte_c_path, file_name)
 
-    # Crear un archivo Excel con múltiples hojas
-    with pd.ExcelWriter(save_path, engine='openpyxl') as writer:
-        esd_items_df.to_excel(writer, sheet_name='ESD Items', index=False)
-        personal_esd_df.to_excel(writer, sheet_name='Personal ESD', index=False)
-        actividades_df.to_excel(writer, sheet_name='Actividades', index=False)
-        usuarios_elementos_df.to_excel(writer, sheet_name='Usuarios Elementos', index=False)
-        evidencias_asignacion_df.to_excel(writer, sheet_name='Evidencias Asignación', index=False)
-        registro_actividades_df.to_excel(writer, sheet_name='Registro Actividades', index=False)
-        actividades_registradas_df.to_excel(writer, sheet_name='Actividades Registradas', index=False)
-        elementos_usuarios_df.to_excel(writer, sheet_name='Usuarios Elementos Todos', index=False)
+    # Guardar el DataFrame unificado en el archivo Excel
+    guardar_excel(save_path, df_unificado)
 
-    # Convertir los datos de cada hoja a tabla
-    wb = load_workbook(save_path)
+def guardar_excel(save_path, df_unificado):
+    try:
+        # Guardar DataFrame en Excel (sobreescribir si ya existe)
+        df_unificado.to_excel(save_path, index=False)
 
-    # Nombres de las hojas
-    sheet_names = ['ESD Items', 'Parámetros ESD', 'Personal ESD', 'Actividades',
-                   'Usuarios Elementos', 'Evidencias Asignación', 'Registro Actividades',
-                   'Actividades Registradas', 'Usuarios Elementos Todos']
-
-    # Recorrer cada hoja para convertir los datos a tabla
-    for sheet_name in sheet_names:
-        ws = wb[sheet_name]
-        # Definir el rango de la tabla (desde A1 hasta la última celda con datos)
-        table_ref = f"A1:{chr(65 + ws.max_column - 1)}{ws.max_row}"
-        # Crear la tabla
-        table = Table(displayName=f"Tabla_{sheet_name.replace(' ', '_')}", ref=table_ref)
-        # Establecer un estilo de tabla
-        style = TableStyleInfo(name="TableStyleMedium9", showFirstColumn=False,
-                               showLastColumn=False, showRowStripes=True, showColumnStripes=True)
-        table.tableStyleInfo = style
-        # Agregar la tabla a la hoja
-        ws.add_table(table)
-
-    # Guardar el archivo con las tablas creadas
-    wb.save(save_path)
-
-    # Notificar la ruta del archivo guardado
-    print(f'El archivo ha sido guardado en: {save_path}')
+        print(f'El archivo ha sido guardado correctamente en: {save_path}')
+    except Exception as e:
+        print(f'Ocurrió un error al guardar el archivo: {e}')

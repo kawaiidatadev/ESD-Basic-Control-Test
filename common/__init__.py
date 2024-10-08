@@ -22,3 +22,7 @@ import pandas as pd
 import pyautogui
 import tempfile
 import ctypes
+import sqlite3
+from openpyxl import load_workbook
+from openpyxl.worksheet.table import Table, TableStyleInfo
+import pytz

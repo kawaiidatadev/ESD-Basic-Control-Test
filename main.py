@@ -1,7 +1,4 @@
-import tkinter as tk
-import os
-import sys
-from PIL import Image, ImageTk
+from common.__init__ import *
 from db_exist import verify_db  # Importa la función para crear la base de datos si no existe.
 from parametros_todo.submain_parametros import *  # Importa la funcion del submenu de primer nivel de parametros
 from submains.submain_personal_esd import *  # Importa la funcion del submenu de primer nivel de personal esd
@@ -10,7 +7,9 @@ from actividades_todo.sub_ventana1 import ven1
 from reporte_grande.reporte_central_anual import reporte_grande
 
 # Variable global de la versión del programa
-VERSION = "1.0.0 Developer: Dr. Luis Macias"
+VERSION = "Sofware ESD Basic version Beta: 1.0.0 \n" \
+          "Linkedin:Luis Manuel Macias Patiño - " \
+          "Github: kawaiidatadev"
 
 def main():
     # Verificamos la base de datos, si no existe la crea.

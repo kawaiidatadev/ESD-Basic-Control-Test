@@ -111,21 +111,28 @@ consulta_limpia_proceso_1 = '''
 
 # Consulta todos los usuarios y su elemento ESD
 consulta_elementos_usuarios = """
-    SELECT
-    esd_items.numero_serie, personal_esd.nombre_usuario, esd_items.tipo_elemento, personal_esd.area, personal_esd.linea, esd_items.comentarios
-    FROM
+SELECT
+    esd_items.numero_serie, 
+    personal_esd.nombre_usuario, 
+    personal_esd.estatus_usuario,  -- Agregando el estatus_usuario
+    esd_items.tipo_elemento, 
+    personal_esd.area, 
+    personal_esd.linea, 
+    esd_items.comentarios, 
+    esd_items.fecha_maestra
+FROM
     usuarios_elementos
-    JOIN
+JOIN
     esd_items
-    ON
+ON
     usuarios_elementos.esd_item_id = esd_items.id
-    JOIN
+JOIN
     personal_esd
-    ON
+ON
     usuarios_elementos.usuario_id = personal_esd.id
-    WHERE
+WHERE
     LOWER(esd_items.tipo_elemento) != 1
-    ORDER
-    BY
-    personal_esd.nombre_usuario
+ORDER BY
+    personal_esd.nombre_usuario;
+
 """
