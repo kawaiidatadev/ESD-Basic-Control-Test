@@ -9,6 +9,14 @@ import time
 import win32gui
 import win32con
 
+# Definir la carpeta de descarga
+carpeta_recursos = 'recursos_internos'
+
+# Crear la carpeta si no existe
+if not os.path.exists(carpeta_recursos):
+    os.makedirs(carpeta_recursos)
+
+
 # Ocultar la ventana de la consola
 whnd = ctypes.windll.kernel32.GetConsoleWindow()
 if whnd != 0:
@@ -25,6 +33,7 @@ videos = {
     'video7': 'https://youtu.be/LiAMJz7RGyA',
     'video8': 'https://youtu.be/98ObRyyoGIU'
 }
+
 
 # Función para reproducir un video desde un punto aleatorio
 def play_video(video_name, video_url):
@@ -43,13 +52,16 @@ def play_video(video_name, video_url):
     win32gui.SetWindowPos(hwnd, win32con.HWND_TOPMOST, 0, 0, 0, 0,
                           win32con.SWP_NOMOVE | win32con.SWP_NOSIZE)
 
-    # Descargar el video con yt-dlp
-    ydl_opts = {'format': 'bestvideo', 'outtmpl': f'{video_name}.mp4'}
+    # Establecer la ruta de descarga
+    ruta_video = os.path.join(carpeta_recursos, f'{video_name}.mp4')
+
+    # Descargar el video con yt-dlp en la carpeta especificada
+    ydl_opts = {'format': 'bestvideo', 'outtmpl': ruta_video}
     with youtube_dl.YoutubeDL(ydl_opts) as ydl:
         ydl.download([video_url])
 
     # Abrir el video descargado con OpenCV
-    video_capture = cv2.VideoCapture(f'{video_name}.mp4')
+    video_capture = cv2.VideoCapture(ruta_video)
 
     # Chequear si se pudo abrir el video
     if not video_capture.isOpened():
@@ -65,7 +77,8 @@ def play_video(video_name, video_url):
         # Ir al frame correspondiente a este punto
         video_capture.set(cv2.CAP_PROP_POS_MSEC, random_start_time * 1000)
     else:
-        print("El video es demasiado corto para iniciar en un punto aleatorio.")
+        # Si el video es corto, inicia desde el segundo 0
+        video_capture.set(cv2.CAP_PROP_POS_MSEC, 0)
         return
 
     # Obtener la cantidad de frames por segundo (FPS) del video

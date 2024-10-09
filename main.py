@@ -7,8 +7,8 @@ from actividades_todo.sub_ventana1 import ven1
 from reporte_grande.reporte_central_anual import reporte_grande
 
 # Variable global de la versión del programa
-VERSION = "Sofware ESD Basic version Beta: 1.0.0 \n" \
-          "Linkedin:Luis Manuel Macias Patiño - " \
+VERSION = "Sofware ESD Basic ß version: 1.0.0 \n" \
+          "Linkedin: Luis Manuel Macias Patiño ¦ " \
           "Github: kawaiidatadev"
 
 def main():
@@ -40,7 +40,7 @@ def main():
 
 
     # Crear un label para mostrar la versión en la esquina inferior izquierda
-    version_label = tk.Label(root, text=f"Versión: {VERSION}", font=("Arial", 10), fg="gray")
+    version_label = tk.Label(root, text=f"{VERSION}", font=("Arial", 10), fg="gray")
     version_label.place(relx=0.0, rely=1.0, anchor='sw', x=10, y=-10)  # Posicionar en la esquina inferior izquierda
 
     # Crear botones
