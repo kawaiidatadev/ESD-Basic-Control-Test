@@ -1,3 +1,4 @@
+from common.__init__ import *
 import pygame
 import yt_dlp as youtube_dl
 import cv2
@@ -26,12 +27,9 @@ if whnd != 0:
 videos = {
     'video1': 'https://youtu.be/YKKOKC6MnpM',
     'video2': 'https://youtu.be/tqC64Rj9dXA',
-    'video3': 'https://youtu.be/xs_OxX5TEW8',
     'video4': 'https://youtu.be/qoL0LBk_4jo',
-    'video5': 'https://youtu.be/xs_OxX5TEW8',
     'video6': 'https://youtu.be/7xj1uzuDj_Y',
-    'video7': 'https://youtu.be/LiAMJz7RGyA',
-    'video8': 'https://youtu.be/98ObRyyoGIU'
+    'video7': 'https://youtu.be/LiAMJz7RGyA'
 }
 
 
@@ -59,6 +57,9 @@ def play_video(video_name, video_url):
     ydl_opts = {'format': 'bestvideo', 'outtmpl': ruta_video}
     with youtube_dl.YoutubeDL(ydl_opts) as ydl:
         ydl.download([video_url])
+
+    # Esperar brevemente para asegurarse de que el archivo se haya descargado completamente
+    time.sleep(2)  # Puedes ajustar el tiempo de espera si es necesario
 
     # Abrir el video descargado con OpenCV
     video_capture = cv2.VideoCapture(ruta_video)
@@ -139,15 +140,18 @@ def play_video(video_name, video_url):
     # os.remove(f'{video_name}.mp4')
     # print(f'{video_name} removido')
 
+
 def iniciar_reporte():
     try:
         # Seleccionar aleatoriamente uno de los videos
         video_name, video_url = random.choice(list(videos.items()))
-
-        # Reproducir el video seleccionado aleatoriamente
-        play_video(video_name, video_url)
-
+        try:
+            # Reproducir el video seleccionado aleatoriamente
+            play_video(video_name, video_url)
+        except Exception as e:
+            # Manejar el error y mostrar un mensaje
+            print(f"Ocurrió un error al reproducir el video: {e}")
     except Exception as e:
         # Manejar el error y mostrar un mensaje
-        print(f"Ocurrió un error: {e}")
+        print(f"Ocurrió un error al seleccionar el video: {e}")
 

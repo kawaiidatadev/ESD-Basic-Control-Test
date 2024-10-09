@@ -2,16 +2,49 @@ from common.__init__ import *
 from reporte_grande.inicializacion import iniciar_reporte
 from settings.__init__ import db_path, reporte_c_path, plantilla_central
 from reporte_grande.limpieza import ejecutar_y_eliminar_bat, ruta_original_bat
+from reporte_grande.generar import abrir_reporte_central
+
+from multiprocessing import Process
+
+
+def proceso_1():
+    print("Proceso 1 iniciado")
+    iniciar_reporte()
+    print("Proceso 1 terminado")
+
+
+def proceso_2():
+    print("Proceso 2 iniciado")
+    abrir_reporte_central()
+    print("Proceso 2 terminado")
+
 
 def reporte_grande():
-    iniciar_reporte()
     print("Reporte Central ESD")
     ejecutar_y_eliminar_bat(ruta_original_bat)
-    generate_report()
+
+    # Crear procesos independientes
+    p1 = Process(target=proceso_1)
+    p2 = Process(target=proceso_2)
+
+    # Iniciar procesos
+    print("Iniciando procesos...")
+    p1.start()
+    p2.start()
+    print("Procesos iniciados")
+
+    # Esperar a que el proceso 2 termine y luego terminar el proceso 1
+    p2.join()
+    if p1.is_alive():
+        print("Terminando proceso 1...")
+        p1.terminate()
+        p1.join()
+    print("Procesos terminados")
+
 
 def generate_report():
 
- # Conectar a la base de datos SQLite
+    # Conectar a la base de datos SQLite
     conn = sqlite3.connect(db_path)
 
     # Obtener datos de las tablas y almacenarlos en DataFrames de pandas
