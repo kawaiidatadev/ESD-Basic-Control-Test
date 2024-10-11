@@ -7,7 +7,7 @@ def configurar_ventana(ventana, titulo="Ventana", tamaño="800x800"):
 
     ventana.title(titulo)
     ventana.geometry(tamaño)  # Define el tamaño de la ventana
-    ventana.resizable(0, 0)  # Bloquea el redimensionamiento de la ventana
+    #ventana.resizable(0, 0)  # Bloquea el redimensionamiento de la ventana
 
     # Usar el nombre de la ventana como clave en el diccionario
     clave_ventana = str(ventana)  # Puedes usar un identificador único para cada ventana
