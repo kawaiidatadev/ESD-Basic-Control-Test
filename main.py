@@ -45,7 +45,7 @@ def main():
 
     # Crear botones
     buttons = [
-        ("Parámetros de Medición", lambda: parametros_medicion(root)),
+        # ("Parámetros de Medición", lambda: parametros_medicion(root)),
         ("Reporte Central", lambda: reporte_grande()),
         ("Actividades", lambda: ven1(root)),
         ("Control de Asignaciones de Equipos", lambda: control_asignaciones(root)),

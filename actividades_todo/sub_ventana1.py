@@ -8,6 +8,7 @@ def ven1(root):
     sub_ventana_act = tk.Toplevel()  # Crear una nueva ventana
     root.withdraw()  # Ocultar la ventana principal al abrir la ventana de parámetros
     configurar_ventana(sub_ventana_act, "Sub menú de actividades")
+    # Maximizar la ventana al final
 
     # Aplicar la imagen de fondo
     poner_imagen_de_fondo(sub_ventana_act, imagen_sub1_actividades, 700, 700, 40, 10)
@@ -34,12 +35,12 @@ def ven1(root):
         "anchor": "center",  # Justificación del texto centrada
     }
 
-    # Botón de Configuración de Actividades
-    btn_conf_actividades = tk.Button(main_frame, text="Configuración de actividades",
-                                     command=lambda: conf_a1(sub_ventana_act),
-                                     bg="#007bff", fg="white",
-                                     **button_style)
-    btn_conf_actividades.grid(row=0, column=0, padx=5, pady=5)
+    # # Botón de Configuración de Actividades
+    # btn_conf_actividades = tk.Button(main_frame, text="Configuración de actividades",
+    #                                  command=lambda: conf_a1(sub_ventana_act),
+    #                                  bg="#007bff", fg="white",
+    #                                  **button_style)
+    # btn_conf_actividades.grid(row=0, column=0, padx=5, pady=5)
 
     # Botón de Cumplimiento de Actividades
     btn_cumplimiento = tk.Button(main_frame, text="Cumplimiento de actividades",
