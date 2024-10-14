@@ -40,4 +40,4 @@ def configurar_ventana(ventana, titulo="Ventana", tamaño=None, pantalla_complet
 
     # Forzar pantalla completa sin bordes y siempre encima
     ventana.attributes('-fullscreen', True)
-    ventana.wm_attributes('-topmost', True)
+    #ventana.wm_attributes('-topmost', True)
