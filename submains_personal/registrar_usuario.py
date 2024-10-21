@@ -117,28 +117,89 @@ def registrar_usuario(root, ventana_personal_esd):  # Agrega ventana_personal_es
     entry_otro_puesto = tk.Entry(marco, font=("Arial", 12), state="disabled", width=30)
     entry_otro_puesto.grid(row=4, column=2, padx=10, pady=10, sticky="w")
 
+
+
+
     # Botones
     btn_frame = tk.Frame(marco)
     btn_frame.grid(row=5, column=0, columnspan=3, pady=10)
 
-    from tkcalendar import Calendar
+    from tkinter import StringVar, Entry, Label
 
-    def agregar_calendario(marco):
-        # Crear y agregar el widget de calendario
-        label_fecha = tk.Label(marco, text="Fecha de Ingreso:", font=("Arial", 12, "bold"))
-        label_fecha.grid(row=0, column=1, padx=10, pady=10, sticky="e")
+    def agregar_calendario_manual(marco):
+        # Texto por defecto sombreado para el Entry
+        texto_por_defecto = "dd/mm/aaaa"
 
-        cal = Calendar(marco, selectmode='day', date_pattern='dd/mm/yyyy')
-        cal.grid(row=0, column=2, padx=10, pady=10, sticky="w")
+        # Crear y agregar el Label
+        label_fecha = Label(marco, text="Fecha de Ingreso:", font=("Arial", 12, "bold"))
+        label_fecha.grid(row=8, column=0, padx=10, pady=10, sticky="e")
 
-        # Función para obtener la fecha seleccionada
+        # Crear un StringVar para manejar el texto del Entry
+        var_fecha = StringVar(value=texto_por_defecto)
+
+        # Crear el Entry con el texto por defecto
+        entry_fecha = Entry(marco, textvariable=var_fecha, font=("Arial", 12), width=30, fg="grey")
+        entry_fecha.grid(row=8, column=1, padx=10, pady=10, sticky="w")
+
+        # Función para limpiar el texto por defecto cuando el Entry es clickeado
+        def limpiar_entry(event):
+            if var_fecha.get() == texto_por_defecto:
+                entry_fecha.delete(0, "end")  # Borra el texto actual
+                entry_fecha.config(fg="black")  # Cambia el color del texto
+
+        # Función para restaurar el texto por defecto si el usuario deja el Entry vacío
+        def restaurar_entry(event):
+            if var_fecha.get() == "":
+                var_fecha.set(texto_por_defecto)
+                entry_fecha.config(fg="grey")
+
+        # Función para insertar automáticamente las barras "/" y validar día y mes
+        def formatear_fecha(event):
+            fecha = var_fecha.get().replace("/", "")  # Elimina cualquier "/" existente
+
+            # Limitar el texto a 8 caracteres (ddmmaaaa) para facilitar el formateo
+            if len(fecha) > 8:
+                fecha = fecha[:8]
+
+            # Agregar "/" en la posición correcta
+            if len(fecha) >= 2:
+                fecha = fecha[:2] + "/" + fecha[2:]
+            if len(fecha) >= 5:
+                fecha = fecha[:5] + "/" + fecha[5:]
+
+            # Validar día y mes
+            if len(fecha) >= 5:
+                dia = int(fecha[:2])
+                mes = int(fecha[3:5])
+
+                # Validar día (01-31) y mes (01-12)
+                if mes < 1 or mes > 12:
+                    fecha = "01/" + fecha[3:]  # Restablecer mes a 01 si es inválido
+                elif dia < 1 or dia > 31:
+                    fecha = fecha[:0] + "01" + fecha[2:]  # Restablecer día a 01 si es inválido
+
+            # Actualizar el StringVar y el cursor
+            var_fecha.set(fecha)
+            entry_fecha.icursor(len(var_fecha.get()))  # Mueve el cursor al final
+
+        # Asociar los eventos de entrada y salida del Entry
+        entry_fecha.bind("<FocusIn>", limpiar_entry)
+        entry_fecha.bind("<FocusOut>", restaurar_entry)
+        entry_fecha.bind("<KeyRelease>", formatear_fecha)  # Llama a formatear_fecha en cada tecla soltada
+
+        # Función para obtener la fecha ingresada manualmente
         def obtener_fecha():
-            return cal.get_date()
+            fecha_ingresada = var_fecha.get()
+            if fecha_ingresada == texto_por_defecto:
+                return None  # No se ingresó ninguna fecha válida
+            return fecha_ingresada  # Retorna la fecha ingresada manualmente
 
         return obtener_fecha
 
     # Guardamos la función de obtener fecha que se generó por agregar_calendario
-    obtener_fecha = agregar_calendario(marco)
+    fecha_inicio = agregar_calendario_manual(marco)
+
+    # Ajustar el botón guardar para que use la función correcta para obtener la fecha
     btn_guardar = tk.Button(btn_frame, text="Registrar Usuario", command=lambda: guardar_usuario(
         root,
         entry_nombre_usuario.get(),
@@ -146,11 +207,11 @@ def registrar_usuario(root, ventana_personal_esd):  # Agrega ventana_personal_es
         var_area.get(),
         var_linea.get(),
         var_puesto.get(),
-        entry_otro_rol,
-        entry_otro_area,
-        entry_otro_linea,
-        entry_otro_puesto,
-        obtener_fecha(),  # Aquí obtenemos la fecha seleccionada
+        entry_otro_rol.get(),
+        entry_otro_area.get(),
+        entry_otro_linea.get(),
+        entry_otro_puesto.get(),
+        fecha_inicio(),  # Aquí se llama a la función para obtener la fecha seleccionada
         ventana_registro
     ), font=("Arial", 14, "bold"), bg="sky blue", height=2, width=20)
     btn_guardar.grid(row=0, column=0, padx=10)
@@ -161,6 +222,9 @@ def registrar_usuario(root, ventana_personal_esd):  # Agrega ventana_personal_es
 
     # Configuración del protocolo para el cierre de ventana
     ventana_registro.protocol("WM_DELETE_WINDOW", salir_registro)
+
+
+
 
     # Ejecutar la ventana de registro
     ventana_registro.mainloop()

@@ -3,8 +3,14 @@ from settings.__init__ import *
 
 
 def guardar_usuario(root, entry_nombre_usuario, var_rol, var_area, var_linea, var_puesto,
-                    entry_otro_rol, entry_otro_area, entry_otro_linea, entry_otro_puesto, obtener_fecha, ventana_registro):
+                    entry_otro_rol, entry_otro_area, entry_otro_linea, entry_otro_puesto, fecha_inicio, ventana_registro):
     try:
+        print(fecha_inicio)
+        print(type(fecha_inicio))
+        fecha_ingresada = fecha_inicio
+
+
+
         # Obtener valores de los campos
         rol = entry_otro_rol.get() if var_rol == "Otro" else var_rol
         area = entry_otro_area.get() if var_area == "Otro" else var_area
@@ -21,6 +27,24 @@ def guardar_usuario(root, entry_nombre_usuario, var_rol, var_area, var_linea, va
             messagebox.showerror("Error", "Debes seleccionar un valor válido en todos los campos.")
             return
 
+        # Validar fecha
+
+        if fecha_ingresada is None or fecha_ingresada == "dd/mm/aaaa":  # Validar si la fecha está vacía o es la por defecto
+            messagebox.showerror("Error", "Debes ingresar una fecha válida.")
+            return
+
+        # Obtener la fecha actual en Guadalajara, Jalisco
+        timezone = pytz.timezone('America/Mexico_City')  # Zona horaria de Guadalajara
+        fecha_actual = datetime.now(timezone).date()  # Obtiene la fecha actual
+
+        # Convertir la fecha ingresada a un objeto de fecha
+        fecha_ingresada_datetime = datetime.strptime(fecha_ingresada, "%d/%m/%Y").date()
+
+        # Validar que la fecha ingresada no sea mayor a la fecha actual
+        if fecha_ingresada_datetime > fecha_actual:
+            messagebox.showerror("Error", "La fecha no puede ser mayor a la fecha actual.")
+            return
+
         # Conexión a la base de datos
         connection = sqlite3.connect(db_path)
         cursor = connection.cursor()
@@ -35,7 +59,7 @@ def guardar_usuario(root, entry_nombre_usuario, var_rol, var_area, var_linea, va
         cursor.execute('''
             INSERT INTO personal_esd (nombre_usuario, rol, area, linea, puesto, estatus_usuario, fecha_ingreso)
             VALUES (?, ?, ?, ?, ?, ?, ?)
-        ''', (entry_nombre_usuario, rol, area, linea, puesto, "Activo", obtener_fecha))
+        ''', (entry_nombre_usuario, rol, area, linea, puesto, "Activo", fecha_ingresada))
 
         connection.commit()
         messagebox.showinfo("Éxito", "Usuario registrado exitosamente.")
