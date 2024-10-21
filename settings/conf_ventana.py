@@ -1,4 +1,5 @@
 from settings.__init__ import inon_path
+from common.__init__ import *
 # Diccionario global para verificar si el icono ya ha sido cargado por ventana
 iconos_cargados = {}
 
@@ -41,3 +42,29 @@ def configurar_ventana(ventana, titulo="Ventana", tamaño=None, pantalla_complet
     # Forzar pantalla completa sin bordes y siempre encima
     ventana.attributes('-fullscreen', True)
     #ventana.wm_attributes('-topmost', True)
+
+    # Función para salir del programa
+    def salir_programa():
+
+        # Cerrar la conexión a la base de datos si está abierta
+        if 'connection' in globals() and connection:
+            connection.close()  # Cierra la conexión a la base de datos
+
+        # Cerrar todas las ventanas de Tkinter
+        if 'root' in globals() and isinstance(ventana, tk.Tk):
+            ventana.quit()  # Cierra todas las ventanas de Tkinter
+            ventana.destroy()  # Destruye el objeto root
+
+        # Salir del programa de manera segura
+        sys.exit(0)  # Sale del programa de manera segura
+        # Salir del programa de manera bruzca
+        sys.exit()
+
+
+    # Manejar la tecla "Esc"
+    def manejar_tecla(event):
+        if event.keysym == 'Escape':
+            salir_programa()
+
+    # Vincular la tecla "Esc" al manejador de eventos
+    ventana.bind("<Key>", manejar_tecla)

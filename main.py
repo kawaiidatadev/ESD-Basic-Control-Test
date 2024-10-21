@@ -73,6 +73,15 @@ def main():
         # Salir del programa de manera bruzca
         sys.exit()
 
+
+    # Manejar la tecla "Esc"
+    def manejar_tecla(event):
+        if event.keysym == 'Escape':
+            salir_programa()
+
+    # Vincular la tecla "Esc" al manejador de eventos
+    root.bind("<Key>", manejar_tecla)
+
     # Crear el botón "Salir"
     btn_salir = tk.Button(root, text="Salir", command=salir_programa, font=("Arial", 14), bg="red", fg="white", height=2, width=10)
     btn_salir.place(relx=1.0, rely=1.0, anchor='se', x=-10, y=-10)  # Posiciona el botón en la esquina inferior derecha
