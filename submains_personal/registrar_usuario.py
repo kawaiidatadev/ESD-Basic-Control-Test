@@ -20,7 +20,7 @@ def registrar_usuario(root, ventana_personal_esd):  # Agrega ventana_personal_es
     marco = tk.Frame(ventana_registro, padx=20, pady=20)
     marco.pack(padx=10, pady=10, fill=tk.BOTH, expand=True)
 
-    poner_imagen_de_fondo(ventana_registro, path_imagen_registro_personal, 200, 300, x=920, y=200)
+    poner_imagen_de_fondo(ventana_registro, path_imagen_registro_personal, 200, 300, x=1000, y=200)
 
     # Campo para el nombre de usuario
     tk.Label(marco, text="Nombre de Usuario:", font=("Arial", 12, "bold")).grid(row=0, column=0, padx=10, pady=10, sticky="e")
@@ -121,6 +121,24 @@ def registrar_usuario(root, ventana_personal_esd):  # Agrega ventana_personal_es
     btn_frame = tk.Frame(marco)
     btn_frame.grid(row=5, column=0, columnspan=3, pady=10)
 
+    from tkcalendar import Calendar
+
+    def agregar_calendario(marco):
+        # Crear y agregar el widget de calendario
+        label_fecha = tk.Label(marco, text="Fecha de Ingreso:", font=("Arial", 12, "bold"))
+        label_fecha.grid(row=0, column=1, padx=10, pady=10, sticky="e")
+
+        cal = Calendar(marco, selectmode='day', date_pattern='dd/mm/yyyy')
+        cal.grid(row=0, column=2, padx=10, pady=10, sticky="w")
+
+        # Función para obtener la fecha seleccionada
+        def obtener_fecha():
+            return cal.get_date()
+
+        return obtener_fecha
+
+    # Guardamos la función de obtener fecha que se generó por agregar_calendario
+    obtener_fecha = agregar_calendario(marco)
     btn_guardar = tk.Button(btn_frame, text="Registrar Usuario", command=lambda: guardar_usuario(
         root,
         entry_nombre_usuario.get(),
@@ -132,6 +150,7 @@ def registrar_usuario(root, ventana_personal_esd):  # Agrega ventana_personal_es
         entry_otro_area,
         entry_otro_linea,
         entry_otro_puesto,
+        obtener_fecha(),  # Aquí obtenemos la fecha seleccionada
         ventana_registro
     ), font=("Arial", 14, "bold"), bg="sky blue", height=2, width=20)
     btn_guardar.grid(row=0, column=0, padx=10)

@@ -58,6 +58,7 @@ def main():
 
     # Función para salir del programa
     def salir_programa():
+
         # Cerrar la conexión a la base de datos si está abierta
         if 'connection' in globals() and connection:
             connection.close()  # Cierra la conexión a la base de datos
@@ -69,6 +70,8 @@ def main():
 
         # Salir del programa de manera segura
         sys.exit(0)  # Sale del programa de manera segura
+        # Salir del programa de manera bruzca
+        sys.exit()
 
     # Crear el botón "Salir"
     btn_salir = tk.Button(root, text="Salir", command=salir_programa, font=("Arial", 14), bg="red", fg="white", height=2, width=10)

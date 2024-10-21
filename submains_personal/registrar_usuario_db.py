@@ -3,7 +3,7 @@ from settings.__init__ import *
 
 
 def guardar_usuario(root, entry_nombre_usuario, var_rol, var_area, var_linea, var_puesto,
-                    entry_otro_rol, entry_otro_area, entry_otro_linea, entry_otro_puesto, ventana_registro):
+                    entry_otro_rol, entry_otro_area, entry_otro_linea, entry_otro_puesto, obtener_fecha, ventana_registro):
     try:
         # Obtener valores de los campos
         rol = entry_otro_rol.get() if var_rol == "Otro" else var_rol
@@ -33,9 +33,9 @@ def guardar_usuario(root, entry_nombre_usuario, var_rol, var_area, var_linea, va
 
         # Insertar el usuario en la base de datos
         cursor.execute('''
-            INSERT INTO personal_esd (nombre_usuario, rol, area, linea, puesto, estatus_usuario)
-            VALUES (?, ?, ?, ?, ?, ?)
-        ''', (entry_nombre_usuario, rol, area, linea, puesto, "Activo"))
+            INSERT INTO personal_esd (nombre_usuario, rol, area, linea, puesto, estatus_usuario, fecha_ingreso)
+            VALUES (?, ?, ?, ?, ?, ?, ?)
+        ''', (entry_nombre_usuario, rol, area, linea, puesto, "Activo", obtener_fecha))
 
         connection.commit()
         messagebox.showinfo("Éxito", "Usuario registrado exitosamente.")
